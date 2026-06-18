@@ -1,73 +1,47 @@
-# React + TypeScript + Vite
+# Shuttle Connect
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Description
+Shuttle Connect is a web platform designed to help badminton players find nearby drop-in games seamlessly. Users can search for games based on location, time, skill level, price, and available slots. Hosts can post game invitations either manually or by importing and parsing the text from their Facebook posts. 
 
-Currently, two official plugins are available:
+## Features
+- **Map-based Search:** Locate courts and games nearby.
+- **Skill-level Matching:** Filter games by skill levels (yếu, trung bình, khá, cứng).
+- **Facebook Post Import:** Parse text from Facebook to extract times, dates, prices, and slots.
+- **Role-based Dashboards:** Player, Host, and Admin views with mock authentication.
+- **Host Verification & Approval Workflow:** Admins can review imported posts to prevent duplicates.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
+- **Frontend:** React, TypeScript, Vite
+- **Styling:** CSS Modules / Plain CSS (No external UI libraries)
+- **Routing:** React Router DOM
+- **Icons:** Lucide React
+- **Package Manager:** pnpm
 
-## React Compiler
+## How to Install
+Ensure you have `pnpm` installed globally. Then run:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd client
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## How to Run
+Start the Vite development server:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd client
+pnpm dev
 ```
+
+## Environment Variables
+Copy `.env.example` to `.env` in the `client` directory and update your keys.
+
+```bash
+cp client/.env.example client/.env
+```
+
+Example content:
+`VITE_VIETMAP_API_KEY=your_vietmap_api_key_here`
+
+## MVP Limitations & Policy
+**Important Policy:** This MVP does not scrape Facebook groups to comply with legal policies and avoid hidden bots/cookies. It only supports manual Facebook post text import (copy-pasting text). Future integration will rely strictly on the official Facebook Page API.
