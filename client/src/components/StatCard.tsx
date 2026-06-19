@@ -23,30 +23,31 @@ export const StatCard: React.FC<StatCardProps> = ({
     <div style={{
       backgroundColor: 'white',
       borderRadius: '16px',
-      padding: '24px',
+      padding: '20px 16px',
       boxShadow: 'var(--shadow-sm)',
       display: 'flex',
       alignItems: 'center',
-      gap: '16px',
+      gap: '12px',
       border: '1px solid var(--border)'
     }}>
       <div style={{
-        width: '56px',
-        height: '56px',
+        width: '48px',
+        height: '48px',
         borderRadius: '50%',
         backgroundColor: iconBgColor,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: '24px',
-        color: iconColor
+        fontSize: '20px',
+        color: iconColor,
+        flexShrink: 0
       }}>
         {iconUrl}
       </div>
-      <div>
-        <div style={{ fontSize: '14px', color: 'var(--navy)', fontWeight: 600 }}>{label}</div>
-        <div style={{ fontSize: '28px', fontWeight: 700, color: 'var(--text)', lineHeight: 1.2 }}>{number}</div>
-        <div style={{ fontSize: '12px', color: subtextColor, marginTop: '4px', fontWeight: 500 }}>{subtext}</div>
+      <div style={{ minWidth: 0 }}>
+        <div style={{ fontSize: '13px', color: 'var(--navy)', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</div>
+        <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text)', lineHeight: 1.2 }}>{number}</div>
+        <div style={{ fontSize: '12px', color: subtextColor, marginTop: '2px', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{subtext}</div>
       </div>
     </div>
   );

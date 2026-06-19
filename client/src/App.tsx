@@ -14,28 +14,28 @@ function App() {
       <Navbar />
 
       <main className="container" style={{ flex: 1, padding: '32px 24px', width: '100%', maxWidth: '1440px' }}>
-        <div style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.35fr 1fr', gap: '32px', alignItems: 'start' }}>
           
           {/* Left Column (~58%) */}
-          <div style={{ width: '58%', display: 'flex', flexDirection: 'column', gap: '40px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '40px', minWidth: 0 }}>
             <HeroSection />
 
             {/* Stats Row */}
             <div className="grid grid-cols-4 gap-4">
-              <StatCard iconUrl={<CalendarIcon size={28} />} iconBgColor="#e5f7ed" iconColor="#18b365" label="Kèo đang mở" number="128" subtext="+12 hôm nay" />
-              <StatCard iconUrl={<UsersIcon size={28} />} iconBgColor="#e5edf7" iconColor="#0d5cff" label="Host uy tín" number="86" subtext="+5 tuần này" />
-              <StatCard iconUrl={<MapPinIcon size={28} />} iconBgColor="#fff4e5" iconColor="#ff8a1f" label="Sân phủ sóng" number="45+" subtext="quận/huyện" subtextColor="var(--muted)" />
-              <StatCard iconUrl={<ChartIcon size={28} />} iconBgColor="#f3e8ff" iconColor="#7c3aed" label="Lượt tìm kiếm" number="2.4K" subtext="tuần này" subtextColor="var(--muted)" />
+              <StatCard iconUrl={<CalendarIcon size={24} />} iconBgColor="#e5f7ed" iconColor="#18b365" label="Kèo mở" number="128" subtext="+12 hôm nay" />
+              <StatCard iconUrl={<UsersIcon size={24} />} iconBgColor="#e5edf7" iconColor="#0d5cff" label="Host" number="86" subtext="+5 tuần này" />
+              <StatCard iconUrl={<MapPinIcon size={24} />} iconBgColor="#fff4e5" iconColor="#ff8a1f" label="Khu vực" number="45+" subtext="quận/huyện" subtextColor="var(--muted)" />
+              <StatCard iconUrl={<ChartIcon size={24} />} iconBgColor="#f3e8ff" iconColor="#7c3aed" label="Tìm kiếm" number="2.4K" subtext="tuần này" subtextColor="var(--muted)" />
             </div>
 
             {/* Features Section */}
             <div>
               <h2 className="text-center" style={{ fontSize: '24px', fontWeight: 700, color: 'var(--navy)', marginBottom: '24px' }}>Tại sao chọn Shuttle Connect?</h2>
               <div className="grid grid-cols-4 gap-4">
-                <FeatureCard iconUrl={<MapPinIcon size={32} color="var(--blue)" />} title="Tìm kèo bản đồ" text="Xem kèo gần bạn nhất trên bản đồ." />
-                <FeatureCard iconUrl={<SearchIcon size={32} color="var(--blue)" />} title="Lọc thông minh" text="Lọc theo thời gian, trình độ, giá." />
-                <FeatureCard iconUrl={<FacebookIcon size={32} color="var(--blue)" />} title="Import Facebook" text="Dán nội dung Facebook, tách tự động." />
-                <FeatureCard iconUrl={<ShieldIcon size={32} color="var(--blue)" />} title="Host uy tín" text="Hệ thống duyệt bài, minh bạch." />
+                <FeatureCard iconUrl={<MapPinIcon size={28} color="var(--blue)" />} title="Tìm bản đồ" text="Xem kèo gần nhất trên map." />
+                <FeatureCard iconUrl={<SearchIcon size={28} color="var(--blue)" />} title="Lọc cực nhạy" text="Theo thời gian, trình độ, giá." />
+                <FeatureCard iconUrl={<FacebookIcon size={28} color="var(--blue)" />} title="Import FB" text="Dán nội dung Facebook, tách nhanh." />
+                <FeatureCard iconUrl={<ShieldIcon size={28} color="var(--blue)" />} title="Uy tín cao" text="Hệ thống duyệt bài, minh bạch." />
               </div>
             </div>
 
@@ -56,7 +56,7 @@ function App() {
           </div>
 
           {/* Right Column (~42%) */}
-          <div style={{ width: '42%', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', minWidth: 0 }}>
             <ExplorePanel />
             <PostFormPanel />
           </div>
