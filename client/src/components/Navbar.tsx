@@ -1,5 +1,5 @@
 import React from 'react';
-import logoUrl from '../assets/shuttle-connect-logo-green-line-lower-4.svg';
+import logoUrl from '../assets/shuttle-connect-logo.svg';
 
 export const Navbar: React.FC = () => {
   return (
@@ -13,9 +13,9 @@ export const Navbar: React.FC = () => {
     }}>
       <div className="container flex items-center justify-between" style={{ height: '100%' }}>
         {/* Logo Area */}
-        <div className="flex items-center gap-2">
+        <a href="/" className="flex items-center gap-2">
           <img src={logoUrl} alt="Shuttle Connect" style={{ height: '40px', width: 'auto' }} />
-        </div>
+        </a>
 
         {/* Center Nav Links */}
         <div className="flex gap-8 hide-on-mobile" style={{ fontSize: '15px', fontWeight: 600 }}>
