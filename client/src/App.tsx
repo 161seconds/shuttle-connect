@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { StatCard } from './components/StatCard';
@@ -5,13 +6,18 @@ import { FeatureCard } from './components/FeatureCard';
 import { GameCard } from './components/GameCard';
 import { ExplorePanel } from './components/ExplorePanel';
 import { PostFormPanel } from './components/PostFormPanel';
+import { LoginModal } from './components/LoginModal';
+import { AuthProvider } from './contexts/AuthContext';
 import { mockGames } from './data/mockGames';
 import { CalendarIcon, UsersIcon, MapPinIcon, ChartIcon, SearchIcon, FacebookIcon, ShieldIcon, StarIcon } from './components/icons';
 
-function App() {
+function AppContent() {
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Navbar />
+      <Navbar onOpenLogin={() => setIsLoginModalOpen(true)} />
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
 
       <main className="container" style={{ flex: 1, padding: '32px 24px', width: '100%', maxWidth: '1440px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1.35fr 1fr', gap: '32px', alignItems: 'start' }}>
@@ -63,6 +69,14 @@ function App() {
         </div>
       </main>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

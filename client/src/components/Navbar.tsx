@@ -1,8 +1,14 @@
 import React from 'react';
 import logoUrl from '../assets/shuttle-connect-logo.svg';
 import { BellIcon } from './icons';
+import { useAuth } from '../contexts/AuthContext';
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  onOpenLogin?: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ onOpenLogin }) => {
+  const { role, logout } = useAuth();
   return (
     <nav style={{
       backgroundColor: 'var(--surface)',
@@ -30,7 +36,38 @@ export const Navbar: React.FC = () => {
         {/* Right side */}
         <div className="flex items-center gap-6">
           <button style={{ color: 'var(--navy)', display: 'flex' }}><BellIcon size={24} /></button>
-          <button className="btn btn-primary" style={{ padding: '8px 24px', fontSize: '14px' }}>Đăng nhập</button>
+          
+          {role ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <img 
+                  src={`https://ui-avatars.com/api/?name=${role}&background=0D8BFF&color=fff&bold=true`} 
+                  alt="Avatar" 
+                  style={{ width: '40px', height: '40px', borderRadius: '50%' }} 
+                />
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--navy)', lineHeight: 1.2 }}>
+                    {role === 'PLAYER' ? 'Người chơi' : role === 'HOST' ? 'Host' : 'Admin'}
+                  </span>
+                  <span style={{ fontSize: '12px', color: 'var(--muted)' }}>Cá nhân</span>
+                </div>
+              </div>
+              <button 
+                onClick={logout}
+                style={{ fontSize: '14px', fontWeight: 600, color: '#ef4444' }}
+              >
+                Thoát
+              </button>
+            </div>
+          ) : (
+            <button 
+              className="btn btn-primary" 
+              style={{ padding: '8px 24px', fontSize: '14px' }}
+              onClick={onOpenLogin}
+            >
+              Đăng nhập
+            </button>
+          )}
         </div>
       </div>
     </nav>
