@@ -1,25 +1,52 @@
 import React from 'react';
 
 interface StatCardProps {
-  title: string;
-  value: string | number;
-  icon: React.ReactNode;
+  iconUrl?: React.ReactNode;
+  iconBgColor?: string;
+  iconColor?: string;
+  label: string;
+  number: string;
+  subtext: string;
+  subtextColor?: string;
 }
 
-export const StatCard: React.FC<StatCardProps> = ({ title, value, icon }) => {
+export const StatCard: React.FC<StatCardProps> = ({ 
+  iconUrl, 
+  iconBgColor = '#e5edf7',
+  iconColor = '#0d5cff',
+  label, 
+  number, 
+  subtext,
+  subtextColor = '#18b365'
+}) => {
   return (
-    <div className="card flex items-center gap-4">
-      <div style={{ 
-        padding: '1rem', 
-        borderRadius: '50%', 
-        background: 'rgba(59, 130, 246, 0.1)',
-        color: 'var(--primary)'
+    <div style={{
+      backgroundColor: 'white',
+      borderRadius: '16px',
+      padding: '24px',
+      boxShadow: 'var(--shadow-sm)',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '16px',
+      border: '1px solid var(--border)'
+    }}>
+      <div style={{
+        width: '56px',
+        height: '56px',
+        borderRadius: '50%',
+        backgroundColor: iconBgColor,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '24px',
+        color: iconColor
       }}>
-        {icon}
+        {iconUrl}
       </div>
       <div>
-        <div className="text-2xl font-bold">{value}</div>
-        <div className="text-sm text-muted">{title}</div>
+        <div style={{ fontSize: '14px', color: 'var(--navy)', fontWeight: 600 }}>{label}</div>
+        <div style={{ fontSize: '28px', fontWeight: 700, color: 'var(--text)', lineHeight: 1.2 }}>{number}</div>
+        <div style={{ fontSize: '12px', color: subtextColor, marginTop: '4px', fontWeight: 500 }}>{subtext}</div>
       </div>
     </div>
   );
