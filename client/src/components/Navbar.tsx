@@ -1,51 +1,35 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import type { UserRole } from '../types';
-import { Activity } from 'lucide-react';
+import logoUrl from '../assets/shuttle-connect-logo-green-line-lower-4.svg';
 
-interface NavbarProps {
-  role: UserRole;
-  onLoginClick: () => void;
-}
-
-export const Navbar: React.FC<NavbarProps> = ({ role, onLoginClick }) => {
-  const location = useLocation();
-  
-  const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Explore', path: '/explore' },
-    { name: 'Host Dashboard', path: '/host', roles: ['Host', 'Admin'] },
-    { name: 'Admin Review', path: '/admin', roles: ['Admin'] },
-    { name: 'About', path: '/about' },
-  ];
-
+export const Navbar: React.FC = () => {
   return (
-    <nav style={{ background: 'var(--bg-card)', borderBottom: '1px solid var(--border-color)', position: 'sticky', top: 0, zIndex: 100 }}>
-      <div className="layout-container flex items-center justify-between" style={{ height: '70px' }}>
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl" style={{ color: 'var(--primary)' }}>
-          <Activity size={28} />
-          Shuttle Connect
-        </Link>
+    <nav style={{
+      backgroundColor: 'var(--surface)',
+      height: '64px',
+      borderBottom: '1px solid var(--border)',
+      position: 'sticky',
+      top: 0,
+      zIndex: 50
+    }}>
+      <div className="container flex items-center justify-between" style={{ height: '100%' }}>
+        {/* Logo Area */}
+        <div className="flex items-center gap-2">
+          <img src={logoUrl} alt="Shuttle Connect" style={{ height: '40px', width: 'auto' }} />
+        </div>
+
+        {/* Center Nav Links */}
+        <div className="flex gap-8 hide-on-mobile" style={{ fontSize: '15px', fontWeight: 600 }}>
+          <a href="#" style={{ color: 'var(--green)', borderBottom: '2px solid var(--green)', paddingBottom: '20px', transform: 'translateY(11px)' }}>Trang chủ</a>
+          <a href="#" className="text-muted">Khám phá</a>
+          <a href="#" className="text-muted">Đăng kèo</a>
+          <a href="#" className="text-muted">Dashboard</a>
+          <a href="#" className="text-muted">Giới thiệu</a>
+        </div>
+
+        {/* Right side */}
         <div className="flex items-center gap-6">
-          {navLinks.map(link => {
-            if (link.roles && !link.roles.includes(role)) return null;
-            const isActive = location.pathname === link.path;
-            return (
-              <Link
-                key={link.name}
-                to={link.path}
-                style={{
-                  fontWeight: isActive ? 600 : 400,
-                  color: isActive ? 'var(--primary)' : 'var(--text-main)'
-                }}
-              >
-                {link.name}
-              </Link>
-            );
-          })}
-          <button className="btn-outline" onClick={onLoginClick}>
-            Login ({role})
-          </button>
+          <button style={{ fontSize: '20px', color: 'var(--navy)' }}>🔔</button>
+          <button className="btn btn-primary" style={{ padding: '8px 24px', fontSize: '14px' }}>Đăng nhập</button>
         </div>
       </div>
     </nav>
