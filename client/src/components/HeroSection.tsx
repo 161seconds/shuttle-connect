@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SearchIcon, PlusIcon } from './icons';
 
 export const HeroSection: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <div style={{
       background: 'linear-gradient(135deg, #e5f0ff 0%, #ffffff 100%)',
@@ -49,10 +51,10 @@ export const HeroSection: React.FC = () => {
           Tìm kèo đánh vãng lai theo vị trí, thời gian, trình độ và số lượng còn trống. Nhanh chóng – Chính xác – Tiện lợi.
         </p>
         <div className="flex gap-4">
-          <button className="btn btn-primary" style={{ padding: '12px 24px', fontSize: '15px', boxShadow: '0 4px 12px rgba(13, 92, 255, 0.2)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button onClick={() => navigate('/explore')} className="btn btn-primary" style={{ padding: '12px 24px', fontSize: '15px', boxShadow: '0 4px 12px rgba(13, 92, 255, 0.2)', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <SearchIcon size={18} /> Khám phá ngay
           </button>
-          <button className="btn btn-outline" style={{ padding: '12px 24px', fontSize: '15px', boxShadow: 'var(--shadow-sm)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button onClick={() => navigate('/host')} className="btn btn-outline" style={{ padding: '12px 24px', fontSize: '15px', boxShadow: 'var(--shadow-sm)', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <PlusIcon size={18} /> Đăng kèo ngay
           </button>
         </div>

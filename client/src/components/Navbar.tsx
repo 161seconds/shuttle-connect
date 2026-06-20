@@ -2,6 +2,7 @@ import React from 'react';
 import logoUrl from '../assets/shuttle-connect-logo.svg';
 import { BellIcon } from './icons';
 import { useAuth } from '../contexts/AuthContext';
+import { Link, useLocation } from 'react-router-dom';
 
 interface NavbarProps {
   onOpenLogin?: () => void;
@@ -9,6 +10,7 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ onOpenLogin }) => {
   const { role, logout } = useAuth();
+  const location = useLocation();
   return (
     <nav style={{
       backgroundColor: 'var(--surface)',
@@ -20,17 +22,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenLogin }) => {
     }}>
       <div className="container flex items-center justify-between" style={{ height: '100%' }}>
         {/* Logo Area */}
-        <a href="/" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2">
           <img src={logoUrl} alt="Shuttle Connect" style={{ height: '40px', width: 'auto' }} />
-        </a>
+        </Link>
 
         {/* Center Nav Links */}
         <div className="flex gap-8 hide-on-mobile" style={{ height: '100%', alignItems: 'center', fontSize: '15px', fontWeight: 600 }}>
-          <a href="/" style={{ color: 'var(--green)', borderBottom: '2px solid var(--green)', display: 'flex', alignItems: 'center', height: '100%' }}>Trang chủ</a>
-          <a href="/explore" className="text-muted" style={{ display: 'flex', alignItems: 'center', height: '100%', borderBottom: '2px solid transparent' }}>Khám phá</a>
-          <a href="/host" className="text-muted" style={{ display: 'flex', alignItems: 'center', height: '100%', borderBottom: '2px solid transparent' }}>Đăng kèo</a>
-          <a href="/admin" className="text-muted" style={{ display: 'flex', alignItems: 'center', height: '100%', borderBottom: '2px solid transparent' }}>Dashboard</a>
-          <a href="/about" className="text-muted" style={{ display: 'flex', alignItems: 'center', height: '100%', borderBottom: '2px solid transparent' }}>Giới thiệu</a>
+          <Link to="/" style={{ color: location.pathname === '/' ? 'var(--green)' : 'var(--muted)', borderBottom: location.pathname === '/' ? '2px solid var(--green)' : '2px solid transparent', display: 'flex', alignItems: 'center', height: '100%' }}>Trang chủ</Link>
+          <Link to="/explore" style={{ color: location.pathname === '/explore' ? 'var(--green)' : 'var(--muted)', display: 'flex', alignItems: 'center', height: '100%', borderBottom: location.pathname === '/explore' ? '2px solid var(--green)' : '2px solid transparent' }}>Khám phá</Link>
+          <Link to="/host" style={{ color: location.pathname === '/host' ? 'var(--green)' : 'var(--muted)', display: 'flex', alignItems: 'center', height: '100%', borderBottom: location.pathname === '/host' ? '2px solid var(--green)' : '2px solid transparent' }}>Đăng kèo</Link>
+          {(role === 'ADMIN') && (
+            <Link to="/admin" style={{ color: location.pathname === '/admin' ? 'var(--green)' : 'var(--muted)', display: 'flex', alignItems: 'center', height: '100%', borderBottom: location.pathname === '/admin' ? '2px solid var(--green)' : '2px solid transparent' }}>Admin</Link>
+          )}
+          <Link to="/about" style={{ color: location.pathname === '/about' ? 'var(--green)' : 'var(--muted)', display: 'flex', alignItems: 'center', height: '100%', borderBottom: location.pathname === '/about' ? '2px solid var(--green)' : '2px solid transparent' }}>Giới thiệu</Link>
         </div>
 
         {/* Right side */}

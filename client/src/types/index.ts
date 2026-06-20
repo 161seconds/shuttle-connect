@@ -24,3 +24,28 @@ export interface GamePost {
   dateLabel?: string;
   slotsText?: string;
 }
+
+export interface ParsedFacebookPost {
+  courtName?: string;
+  address?: string;
+  district?: string;
+  date?: string;
+  startTime?: string;
+  endTime?: string;
+  timeRange?: string;
+  slotsNeeded?: number;
+  price?: number;
+  skillLevel?: string;
+  contactInfo?: string;
+  confidenceScore: number;
+  missingFields: string[];
+}
+
+export interface SearchFilters {
+  district?: string;
+  date?: string;
+  timeRange?: string;
+  skillLevel?: string;
+  maxPrice?: number;
+  availableSlotsOnly?: boolean;
+}
