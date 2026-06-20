@@ -1,12 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ImportFacebookPost } from '../components/ImportFacebookPost';
 import { HostPostForm } from '../components/HostPostForm';
-import { mockPosts } from '../data/mockPosts';
 import { GameList } from '../components/GameList';
+import { api } from '../api';
+import type { GamePost } from '../types';
 
 export const HostDashboardPage: React.FC = () => {
-  // Only showing posts hosted by the current user (mocked as 'h1' or just showing all for now)
-  const hostPosts = mockPosts;
+  const [hostPosts, setHostPosts] = useState<GamePost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchHostPosts = async () => {
+    setLoading(true);
+    try {
+      // In a real app we'd filter by hostId. For MVP we fetch all.
+      const data = await api.getPosts();
+      setHostPosts(data);
+    } catch (error) {
+      console.error('Error fetching host posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchHostPosts();
+  }, []);
 
   return (
     <div className="layout-container py-8">
@@ -14,10 +32,10 @@ export const HostDashboardPage: React.FC = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         <div>
-          <HostPostForm />
+          <HostPostForm onSuccess={fetchHostPosts} />
         </div>
         <div>
-          <ImportFacebookPost />
+          <ImportFacebookPost onSuccess={fetchHostPosts} />
           
           <div className="card mt-8" style={{ background: 'rgba(59, 130, 246, 0.05)' }}>
             <h3 className="font-bold text-lg mb-2">Facebook API Status</h3>
@@ -30,7 +48,7 @@ export const HostDashboardPage: React.FC = () => {
 
       <div>
         <h2 className="font-bold text-xl mb-4">Your Active Posts</h2>
-        <GameList posts={hostPosts} />
+        {loading ? <p>Loading...</p> : <GameList posts={hostPosts} />}
       </div>
     </div>
   );

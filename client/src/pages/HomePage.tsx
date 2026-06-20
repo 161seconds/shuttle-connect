@@ -1,54 +1,80 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { HeroSection } from '../components/HeroSection';
 import { StatCard } from '../components/StatCard';
-import { Activity, Users, Map } from 'lucide-react';
+import { FeatureCard } from '../components/FeatureCard';
+import { GameCard } from '../components/GameCard';
+import { ExplorePanel } from '../components/ExplorePanel';
+import { PostFormPanel } from '../components/PostFormPanel';
+import { api } from '../api';
+import type { GamePost } from '../types';
+import { CalendarIcon, UsersIcon, MapPinIcon, ChartIcon, SearchIcon, FacebookIcon, ShieldIcon, StarIcon } from '../components/icons';
 
 export const HomePage: React.FC = () => {
+  const [recentPosts, setRecentPosts] = useState<GamePost[]>([]);
+
+  useEffect(() => {
+    const fetchRecent = async () => {
+      try {
+        const data = await api.getPosts();
+        // Just show 2 recent or featured games on the homepage
+        setRecentPosts(data.slice(0, 2));
+      } catch (err) {
+        console.error('Error fetching recent posts', err);
+      }
+    };
+    fetchRecent();
+  }, []);
+
   return (
-    <div className="layout-container py-8">
-      {/* Hero Section */}
-      <section className="text-center mb-16 mt-8">
-        <h1 className="text-2xl font-bold mb-4" style={{ fontSize: '3rem', color: 'var(--primary)' }}>
-          Find your next badminton drop-in game
-        </h1>
-        <p className="text-xl text-muted mb-8 max-w-2xl mx-auto">
-          Easily discover nearby badminton games matching your skill level, time preference, and location. Or post your own game to find players!
-        </p>
-        <div className="flex justify-center gap-4">
-          <Link to="/explore" className="btn-primary text-lg px-8 py-3">Explore Games</Link>
-          <Link to="/host" className="btn-outline text-lg px-8 py-3">Post a Game</Link>
-        </div>
-      </section>
+    <div className="container" style={{ padding: '32px 24px', width: '100%', maxWidth: '1440px', margin: '0 auto' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1.35fr 1fr', gap: '32px', alignItems: 'start' }}>
+        
+        {/* Left Column (~58%) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '40px', minWidth: 0 }}>
+          <HeroSection />
 
-      {/* Stats Section */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-        <StatCard title="Active Games Today" value="42" icon={<Activity size={32} />} />
-        <StatCard title="Verified Hosts" value="150+" icon={<Users size={32} />} />
-        <StatCard title="Courts Covered" value="28" icon={<Map size={32} />} />
-      </section>
+          {/* Stats Row */}
+          <div className="grid grid-cols-4 gap-4">
+            <StatCard iconUrl={<CalendarIcon size={24} />} iconBgColor="#e5f7ed" iconColor="#18b365" label="Kèo mở" number="128" subtext="+12 hôm nay" />
+            <StatCard iconUrl={<UsersIcon size={24} />} iconBgColor="#e5edf7" iconColor="#0d5cff" label="Host" number="86" subtext="+5 tuần này" />
+            <StatCard iconUrl={<MapPinIcon size={24} />} iconBgColor="#fff4e5" iconColor="#ff8a1f" label="Khu vực" number="45+" subtext="quận/huyện" subtextColor="var(--muted)" />
+            <StatCard iconUrl={<ChartIcon size={24} />} iconBgColor="#f3e8ff" iconColor="#7c3aed" label="Tìm kiếm" number="2.4K" subtext="tuần này" subtextColor="var(--muted)" />
+          </div>
 
-      {/* Features Section */}
-      <section>
-        <h2 className="text-2xl font-bold mb-6 text-center">Why Shuttle Connect?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="card">
-            <h3 className="font-bold text-lg mb-2 text-primary">Map-based Search</h3>
-            <p className="text-muted">Find games near you using our integrated VietMap feature. No more asking for directions!</p>
+          {/* Features Section */}
+          <div>
+            <h2 className="text-center" style={{ fontSize: '24px', fontWeight: 700, color: 'var(--navy)', marginBottom: '24px' }}>Tại sao chọn Shuttle Connect?</h2>
+            <div className="grid grid-cols-4 gap-4">
+              <FeatureCard iconUrl={<MapPinIcon size={28} color="var(--blue)" />} title="Tìm bản đồ" text="Xem kèo gần nhất trên map." />
+              <FeatureCard iconUrl={<SearchIcon size={28} color="var(--blue)" />} title="Lọc cực nhạy" text="Theo thời gian, trình độ, giá." />
+              <FeatureCard iconUrl={<FacebookIcon size={28} color="var(--blue)" />} title="Import FB" text="Dán nội dung Facebook, tách nhanh." />
+              <FeatureCard iconUrl={<ShieldIcon size={28} color="var(--blue)" />} title="Uy tín cao" text="Hệ thống duyệt bài, minh bạch." />
+            </div>
           </div>
-          <div className="card">
-            <h3 className="font-bold text-lg mb-2 text-primary">Skill-level Matching</h3>
-            <p className="text-muted">Play with people at your level. From beginners to advanced players, find the right group.</p>
-          </div>
-          <div className="card">
-            <h3 className="font-bold text-lg mb-2 text-primary">Facebook Import</h3>
-            <p className="text-muted">Hosts can easily paste Facebook post text and let our parser fill in the details automatically.</p>
-          </div>
-          <div className="card">
-            <h3 className="font-bold text-lg mb-2 text-primary">Host Verification</h3>
-            <p className="text-muted">Play safely with verified hosts. Real players, real games.</p>
+
+          {/* Featured Games Section */}
+          <div>
+            <div className="flex justify-between items-center" style={{ marginBottom: '20px' }}>
+              <h2 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--navy)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ color: 'var(--green)', display: 'flex' }}><StarIcon size={24} /></span> Kèo nổi bật gần bạn
+              </h2>
+              <Link to="/explore" className="text-blue font-semibold">Xem tất cả →</Link>
+            </div>
+            <div className="grid grid-cols-2 gap-6">
+              {recentPosts.length === 0 ? <p>Loading...</p> : recentPosts.map(game => (
+                <GameCard key={game.id} game={game} />
+              ))}
+            </div>
           </div>
         </div>
-      </section>
+
+        {/* Right Column (~42%) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', minWidth: 0 }}>
+          <ExplorePanel />
+          <PostFormPanel />
+        </div>
+      </div>
     </div>
   );
 };

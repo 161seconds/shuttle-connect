@@ -1,14 +1,62 @@
 import React, { useState } from 'react';
-import { parseFacebookPost } from '../utils/postParser';
+import { api } from '../api';
 import type { ParsedFacebookPost } from '../types';
 
-export const ImportFacebookPost: React.FC = () => {
+interface ImportFacebookPostProps {
+  onSuccess?: () => void;
+}
+
+export const ImportFacebookPost: React.FC<ImportFacebookPostProps> = ({ onSuccess }) => {
   const [text, setText] = useState('');
   const [parsedData, setParsedData] = useState<ParsedFacebookPost | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleParse = () => {
-    const data = parseFacebookPost(text);
-    setParsedData(data);
+  const handleParse = async () => {
+    if (!text) return;
+    setLoading(true);
+    try {
+      const data = await api.parseFacebookPost(text);
+      setParsedData(data);
+    } catch (error) {
+      console.error('Parse error:', error);
+      alert('Failed to parse text from server.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateDraft = async () => {
+    if (!parsedData) return;
+    setLoading(true);
+    try {
+      await api.createPost({
+        courtName: parsedData.courtName || 'Unknown Court',
+        address: parsedData.address || 'Unknown Address',
+        district: parsedData.district || 'Unknown District',
+        playDate: parsedData.date || new Date().toISOString().split('T')[0], // fallback today
+        startTime: parsedData.startTime || '18:00',
+        endTime: parsedData.endTime || '20:00',
+        skillLevel: parsedData.skillLevel || 'Trung bình',
+        slotsNeeded: parsedData.slotsNeeded || 1,
+        price: parsedData.price || 50000,
+        contactInfo: parsedData.contactInfo || 'Unknown Contact',
+        description: text,
+        hostName: 'Current Host',
+        sourceType: 'FACEBOOK_IMPORT',
+        status: 'PENDING',
+        slotsText: `Cần thêm ${parsedData.slotsNeeded || 1} slot`,
+        dateLabel: 'Imported Date'
+      });
+      alert('Tạo nháp thành công! Vui lòng chờ Admin duyệt.');
+      setText('');
+      setParsedData(null);
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      console.error('Create error:', error);
+      alert('Lỗi tạo kèo nháp.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -24,8 +72,8 @@ export const ImportFacebookPost: React.FC = () => {
         onChange={(e) => setText(e.target.value)}
         style={{ width: '100%', resize: 'vertical', marginBottom: '1rem' }}
       />
-      <button className="btn-primary" onClick={handleParse}>
-        Parse Post
+      <button disabled={loading || !text} className="btn-primary" onClick={handleParse}>
+        {loading ? 'Parsing...' : 'Parse Post'}
       </button>
 
       {parsedData && (
@@ -38,7 +86,7 @@ export const ImportFacebookPost: React.FC = () => {
           </h4>
           <div className="grid grid-cols-2 gap-2 text-sm mb-4">
             <div><strong>Date:</strong> {parsedData.date || '---'}</div>
-            <div><strong>Time:</strong> {parsedData.timeRange || '---'}</div>
+            <div><strong>Time:</strong> {parsedData.startTime ? `${parsedData.startTime} - ${parsedData.endTime}` : '---'}</div>
             <div><strong>Slots:</strong> {parsedData.slotsNeeded || '---'}</div>
             <div><strong>Price:</strong> {parsedData.price ? `${parsedData.price} VND` : '---'}</div>
             <div><strong>Skill Level:</strong> {parsedData.skillLevel || '---'}</div>
@@ -51,7 +99,7 @@ export const ImportFacebookPost: React.FC = () => {
             </div>
           )}
 
-          <button className="btn-outline" style={{ width: '100%' }}>
+          <button disabled={loading} className="btn-outline" style={{ width: '100%' }} onClick={handleCreateDraft}>
             Create Draft Post
           </button>
         </div>
