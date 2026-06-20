@@ -11,7 +11,7 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({ iconUrl, title, text }
     <div style={{
       backgroundColor: 'white',
       borderRadius: '24px',
-      padding: '32px 24px',
+      padding: '24px 16px',
       boxShadow: 'var(--shadow-sm)',
       border: '1px solid var(--border)',
       display: 'flex',
