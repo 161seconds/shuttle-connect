@@ -8,7 +8,7 @@ interface CompactGameItemProps {
 
 export const CompactGameItem: React.FC<CompactGameItemProps> = ({ game }) => {
   return (
-    <div style={{
+    <div className="hover-lift" style={{
       display: 'flex',
       gap: '16px',
       padding: '16px',
@@ -17,7 +17,8 @@ export const CompactGameItem: React.FC<CompactGameItemProps> = ({ game }) => {
       backgroundColor: 'var(--surface)',
       borderRadius: '16px',
       marginBottom: '12px',
-      boxShadow: 'var(--shadow-sm)'
+      boxShadow: 'var(--shadow-sm)',
+      cursor: 'pointer'
     }}>
       <div style={{
         width: '100px',

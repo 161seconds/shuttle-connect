@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SearchIcon, PlusIcon } from './icons';
+import { LightRays } from './LightRays';
 
 export const HeroSection: React.FC = () => {
   const navigate = useNavigate();
@@ -17,34 +18,22 @@ export const HeroSection: React.FC = () => {
       boxShadow: 'var(--shadow-sm)',
       border: '1px solid var(--border)'
     }}>
-      {/* Background Court Lines */}
-      <div style={{
-        position: 'absolute',
-        bottom: '-20%',
-        right: '-10%',
-        width: '60%',
-        height: '140%',
-        borderRadius: '80px 0 0 0',
-        transform: 'rotate(-15deg)',
-        pointerEvents: 'none',
-        background: 'var(--blue)',
-        overflow: 'hidden'
-      }}>
-        <svg width="0" height="0" style={{ position: 'absolute' }}>
-          <filter id="noise">
-            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
-            <feColorMatrix type="matrix" values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 0.15 0" />
-          </filter>
-        </svg>
-        <div style={{
-          position: 'absolute',
-          inset: '-50%',
-          background: 'var(--blue)',
-          backgroundImage: 'radial-gradient(var(--blue-dark) 2px, transparent 2px)',
-          backgroundSize: '32px 32px',
-          animation: 'noise-drift 20s linear infinite',
-          filter: 'url(#noise)'
-        }}></div>
+      {/* Background Light Rays */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+        <LightRays
+          raysOrigin="right"
+          raysColor="#0d5cff"
+          raysSpeed={1}
+          lightSpread={0.5}
+          rayLength={3}
+          followMouse={true}
+          mouseInfluence={0.1}
+          noiseAmount={0}
+          distortion={0}
+          pulsating={false}
+          fadeDistance={1}
+          saturation={1}
+        />
       </div>
 
       {/* Content */}

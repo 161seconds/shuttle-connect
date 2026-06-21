@@ -2,15 +2,12 @@ import React, { useState, useEffect } from 'react';
 
 import { BellIcon, BadmintonIcon, SunIcon, MoonIcon } from './icons';
 import { useAuth } from '../contexts/AuthContext';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-interface NavbarProps {
-  onOpenLogin?: () => void;
-}
-
-export const Navbar: React.FC<NavbarProps> = ({ onOpenLogin }) => {
+export const Navbar: React.FC = () => {
   const { role, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [theme, setTheme] = useState(document.documentElement.getAttribute('data-theme') || 'dark');
 
   const toggleTheme = () => {
@@ -89,7 +86,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenLogin }) => {
             <button 
               className="btn btn-primary" 
               style={{ padding: '8px 24px', fontSize: '14px' }}
-              onClick={onOpenLogin}
+              onClick={() => navigate('/login')}
             >
               Đăng nhập
             </button>

@@ -48,21 +48,38 @@ export const ExplorePage: React.FC = () => {
   };
 
   return (
-    <div className="container py-8 explore-layout" style={{ height: 'calc(100vh - 70px)' }}>
-      {/* Left Sidebar */}
-      <div style={{ width: '100%', maxWidth: '300px', flexShrink: 0, overflowY: 'auto' }}>
-        <SearchFilters filters={filters} onFilterChange={setFilters} />
+    <div style={{ display: 'flex', height: 'calc(100vh - 70px)', overflow: 'hidden' }}>
+      
+      {/* Left Column: Filters and List (Scrollable) */}
+      <div style={{ 
+        width: '40%', minWidth: '400px', maxWidth: '500px', 
+        height: '100%', overflowY: 'auto', 
+        borderRight: '1px solid var(--border)',
+        backgroundColor: 'var(--bg)',
+        display: 'flex', flexDirection: 'column'
+      }}>
+        {/* Filters Sticky Header */}
+        <div style={{ padding: '24px', position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'var(--bg)', borderBottom: '1px solid var(--border)' }}>
+          <h2 className="font-bold text-2xl mb-4" style={{ color: 'var(--navy)' }}>Khám phá kèo</h2>
+          <SearchFilters filters={filters} onFilterChange={setFilters} />
+        </div>
+
+        {/* Scrollable List */}
+        <div style={{ padding: '24px', flex: 1 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h3 className="font-bold text-lg">Kết quả ({loading ? '...' : posts.length})</h3>
+          </div>
+          {loading ? (
+            <p className="text-muted">Đang tải...</p>
+          ) : (
+            <GameList posts={posts} onHover={setHoveredGameId} onClick={handleGameClick} />
+          )}
+        </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-col flex-1" style={{ display: 'flex', gap: '24px', overflowY: 'auto', minWidth: 0 }}>
-        <div style={{ height: '400px', flexShrink: 0 }}>
-          <MockMap games={posts} hoveredGameId={hoveredGameId} />
-        </div>
-        <div>
-          <h2 className="font-bold text-xl mb-4">Available Games ({loading ? '...' : posts.length})</h2>
-          {loading ? <p>Loading...</p> : <GameList posts={posts} onHover={setHoveredGameId} onClick={handleGameClick} />}
-        </div>
+      {/* Right Column: Sticky Map */}
+      <div style={{ flex: 1, height: '100%', position: 'relative' }}>
+        <MockMap games={posts} hoveredGameId={hoveredGameId} />
       </div>
 
       {/* View Transition Modal Overlay */}

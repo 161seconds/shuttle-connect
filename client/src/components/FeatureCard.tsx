@@ -8,15 +8,19 @@ interface FeatureCardProps {
 
 export const FeatureCard: React.FC<FeatureCardProps> = ({ iconUrl, title, text }) => {
   return (
-    <div style={{
+    <div className="hover-lift" style={{
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       textAlign: 'center',
       gap: '12px',
-      height: '100%'
+      height: '100%',
+      padding: '16px',
+      borderRadius: '16px',
+      backgroundColor: 'var(--surface)',
+      cursor: 'default'
     }}>
-      <div style={{
+      <div className="hover-scale-icon" style={{
         width: '48px',
         height: '48px',
         borderRadius: '50%',

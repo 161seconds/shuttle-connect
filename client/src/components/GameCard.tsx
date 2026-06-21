@@ -12,6 +12,7 @@ interface GameCardProps {
 export const GameCard: React.FC<GameCardProps> = ({ game, onMouseEnter, onMouseLeave, onClick }) => {
   return (
     <div 
+      className="hover-lift"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
@@ -26,15 +27,6 @@ export const GameCard: React.FC<GameCardProps> = ({ game, onMouseEnter, onMouseL
         position: 'relative',
         cursor: onClick ? 'pointer' : 'default',
         viewTransitionName: `game-card-morph-${game.id}`,
-        transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s',
-      }}
-      onMouseOver={(e) => {
-        e.currentTarget.style.transform = 'translateY(-4px)';
-        e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-      }}
-      onMouseOut={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
       }}
     >
       {/* Image Placeholder */}
