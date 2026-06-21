@@ -27,7 +27,7 @@ export const HostDashboardPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="layout-container py-8">
+    <div className="container py-8">
       <h1 className="text-2xl font-bold mb-8">Host Dashboard</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -37,7 +37,7 @@ export const HostDashboardPage: React.FC = () => {
         <div>
           <ImportFacebookPost onSuccess={fetchHostPosts} />
           
-          <div className="card mt-8" style={{ background: 'rgba(59, 130, 246, 0.05)' }}>
+          <div className="card mt-8" style={{ background: 'var(--soft-bg)' }}>
             <h3 className="font-bold text-lg mb-2">Facebook API Status</h3>
             <p className="text-sm text-muted">
               Official Facebook Page API integration is planned for a future release. Group scraping is not supported to comply with policies.

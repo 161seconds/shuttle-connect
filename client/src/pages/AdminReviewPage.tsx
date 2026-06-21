@@ -36,7 +36,7 @@ export const AdminReviewPage: React.FC = () => {
   };
 
   return (
-    <div className="layout-container py-8">
+    <div className="container py-8">
       <h1 className="text-2xl font-bold mb-4">Admin Review Dashboard</h1>
       <p className="text-muted mb-8">Review imported posts from hosts to ensure data quality and avoid duplicates.</p>
 
@@ -53,10 +53,10 @@ export const AdminReviewPage: React.FC = () => {
               </div>
               <GameCard game={post} />
               
-              <div className="flex gap-4 mt-2">
-                <button onClick={() => handleUpdateStatus(post.id, 'APPROVED')} className="btn-primary" style={{ background: 'var(--success)' }}>Approve</button>
-                <button onClick={() => handleUpdateStatus(post.id, 'DUPLICATE')} className="btn-outline">Mark Duplicate</button>
-                <button onClick={() => handleUpdateStatus(post.id, 'REJECTED')} className="btn-outline" style={{ color: 'var(--danger)', borderColor: 'var(--danger)' }}>Reject</button>
+              <div className="flex gap-4 mt-4">
+                <button onClick={() => handleUpdateStatus(post.id, 'APPROVED')} className="btn btn-success">Approve</button>
+                <button onClick={() => handleUpdateStatus(post.id, 'DUPLICATE')} className="btn btn-outline">Mark Duplicate</button>
+                <button onClick={() => handleUpdateStatus(post.id, 'REJECTED')} className="btn btn-danger-outline">Reject</button>
               </div>
             </div>
           ))}

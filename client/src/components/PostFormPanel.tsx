@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CalendarIcon, FacebookIcon } from './icons';
+import { CalendarIcon, FacebookIcon, MapPinIcon, ClockIcon, StarIcon, PhoneIcon } from './icons';
 
 export const PostFormPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'MANUAL' | 'FB'>('MANUAL');
@@ -149,11 +149,11 @@ export const PostFormPanel: React.FC = () => {
             <div style={{ height: '120px', backgroundColor: 'var(--border)', backgroundImage: 'url("https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80")', backgroundSize: 'cover', backgroundPosition: 'center' }}></div>
             <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <h4 style={{ margin: 0, fontSize: '16px', fontWeight: 700, color: 'var(--navy)' }}>Sân KDC Tân Quy</h4>
-              <div style={{ fontSize: '13px', color: 'var(--muted)' }}>📍 Quận 7, TP. HCM</div>
-              <div style={{ fontSize: '13px', color: 'var(--muted)' }}>⏰ 23/05/2025 • 19:00 - 21:00</div>
-              <div style={{ fontSize: '13px', color: 'var(--muted)' }}>🏅 Trình độ: Trung bình khá</div>
-              <div style={{ fontSize: '13px', color: 'var(--muted)' }}>💰 80K/người</div>
-              <div style={{ fontSize: '13px', color: 'var(--muted)' }}>📞 0909 123 456 (Zalo)</div>
+              <div style={{ fontSize: '13px', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: '4px' }}><MapPinIcon size={14} /> Quận 7, TP. HCM</div>
+              <div style={{ fontSize: '13px', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: '4px' }}><ClockIcon size={14} /> 23/05/2025 • 19:00 - 21:00</div>
+              <div style={{ fontSize: '13px', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: '4px' }}><StarIcon size={14} /> Trình độ: Trung bình khá</div>
+              <div style={{ fontSize: '13px', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: '4px' }}><b style={{fontWeight: 700, fontSize: 14}}>₫</b> 80K/người</div>
+              <div style={{ fontSize: '13px', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: '4px' }}><PhoneIcon size={14} /> 0909 123 456 (Zalo)</div>
               
               <div style={{ marginTop: '8px', padding: '10px', backgroundColor: 'var(--soft-bg)', borderRadius: '8px', fontSize: '12px', color: 'var(--muted)', fontStyle: 'italic' }}>
                 "Giao lưu vui vẻ, không quạu. Cần tuyển 2 bạn đánh cố định."
