@@ -1,11 +1,16 @@
 import React from 'react';
 import { SearchIcon } from './icons';
 import { MockMap } from './MockMap';
+import type { GamePost } from '../types';
 
-export const ExplorePanel: React.FC = () => {
+interface ExplorePanelProps {
+  games?: GamePost[];
+}
+
+export const ExplorePanel: React.FC<ExplorePanelProps> = ({ games = [] }) => {
   return (
     <div style={{
-      backgroundColor: 'white',
+      backgroundColor: 'var(--surface)',
       borderRadius: '24px',
       padding: '24px',
       boxShadow: 'var(--shadow-md)',
@@ -40,7 +45,7 @@ export const ExplorePanel: React.FC = () => {
 
       {/* Content Area: Map Only */}
       <div style={{ flex: 1, borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--border)', minHeight: 0 }}>
-        <MockMap />
+        <MockMap games={games} />
       </div>
     </div>
   );
