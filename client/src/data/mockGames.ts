@@ -18,7 +18,9 @@ export const mockGames: GamePost[] = [
     contactInfo: "0909123456",
     description: "Nhóm vui vẻ, tìm người đánh mồ hôi.",
     sourceType: "MANUAL",
-    status: "OPEN"
+    status: "OPEN",
+    lat: 10.7340,
+    lng: 106.7215
   },
   {
     id: "g2",
@@ -37,7 +39,9 @@ export const mockGames: GamePost[] = [
     contactInfo: "0909123457",
     description: "Nhóm thiếu người gấp",
     sourceType: "FACEBOOK_IMPORT",
-    status: "OPEN"
+    status: "OPEN",
+    lat: 10.7540,
+    lng: 106.6630
   },
   {
     id: "g3",
@@ -56,7 +60,9 @@ export const mockGames: GamePost[] = [
     contactInfo: "0909123458",
     description: "Trình độ khá, đánh nhanh",
     sourceType: "MANUAL",
-    status: "OPEN"
+    status: "OPEN",
+    lat: 10.7735,
+    lng: 106.6660
   },
   {
     id: "g4",
@@ -75,6 +81,8 @@ export const mockGames: GamePost[] = [
     contactInfo: "0909123459",
     description: "Sân rộng, thảm mới",
     sourceType: "MANUAL",
-    status: "OPEN"
+    status: "OPEN",
+    lat: 10.8500,
+    lng: 106.7550
   }
 ];

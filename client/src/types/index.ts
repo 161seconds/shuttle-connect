@@ -23,6 +23,10 @@ export interface GamePost {
   // UI-specific helpers based on the image
   dateLabel?: string;
   slotsText?: string;
+  
+  // Map coordinates
+  lat?: number;
+  lng?: number;
 }
 
 export interface ParsedFacebookPost {

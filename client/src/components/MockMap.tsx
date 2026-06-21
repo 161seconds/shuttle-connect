@@ -1,61 +1,118 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+// @ts-ignore
+import vietmapgl from '@vietmap/vietmap-gl-js/dist/vietmap-gl';
+import '@vietmap/vietmap-gl-js/dist/vietmap-gl.css';
+import type { GamePost } from '../types';
 
-export const MockMap: React.FC = () => {
+interface MockMapProps {
+  games?: GamePost[];
+}
+
+export const MockMap: React.FC<MockMapProps> = ({ games = [] }) => {
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const [, setMap] = useState<any>(null);
+
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+
+    const apiKey = import.meta.env.VITE_VIETMAP_API_KEY || '';
+    
+    // Fallback if no API key
+    if (!apiKey) {
+      console.warn("No VietMap API key found");
+      return;
+    }
+
+    const mapInstance = new vietmapgl.Map({
+      container: mapContainerRef.current,
+      style: `https://maps.vietmap.vn/api/maps/light/styles.json?apikey=${apiKey}`,
+      center: [106.68, 10.76], // HCMC center
+      zoom: 11,
+      pitch: 0,
+      bearing: 0
+    });
+
+    mapInstance.on('load', () => {
+      setMap(mapInstance);
+      
+      // Add markers
+      games.forEach(game => {
+        if (game.lat && game.lng) {
+          const el = document.createElement('div');
+          el.innerHTML = '<div style="font-size: 32px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); cursor: pointer;">📍</div>';
+          
+          el.addEventListener('click', () => {
+            new vietmapgl.Popup({ offset: 25 })
+              .setDOMContent(
+                (function() {
+                  const div = document.createElement('div');
+                  div.innerHTML = `
+                    <div style="padding: 4px; font-family: sans-serif; color: #111827;">
+                      <h4 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 700;">${game.courtName}</h4>
+                      <p style="margin: 0 0 4px 0; font-size: 12px; color: #666;">${game.startTime} - ${game.endTime}</p>
+                      <p style="margin: 0; font-size: 12px; font-weight: bold; color: #0d5cff;">${game.price.toLocaleString()}đ</p>
+                    </div>
+                  `;
+                  return div;
+                })()
+              )
+              .setLngLat([game.lng!, game.lat!])
+              .addTo(mapInstance);
+          });
+
+          new vietmapgl.Marker({ element: el })
+            .setLngLat([game.lng, game.lat])
+            .addTo(mapInstance);
+        }
+      });
+    });
+
+    return () => {
+      mapInstance.remove();
+    };
+  }, [games]);
+
   return (
     <div style={{
       width: '100%',
       height: '100%',
       minHeight: '600px',
-      backgroundColor: '#e5e7eb',
+      backgroundColor: 'var(--soft-bg)',
       borderRadius: '24px',
       position: 'relative',
       overflow: 'hidden',
-      backgroundImage: 'radial-gradient(#d1d5db 1px, transparent 1px)',
-      backgroundSize: '20px 20px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center'
     }}>
-      {/* Future VietMap integration using import.meta.env.VITE_VIETMAP_API_KEY */}
-      
-      {/* Map Labels/Roads Mock */}
-      <div style={{ position: 'absolute', top: '20%', left: '30%', fontSize: '14px', fontWeight: 600, color: '#9ca3af', transform: 'rotate(-15deg)' }}>TÂN BÌNH</div>
-      <div style={{ position: 'absolute', top: '40%', left: '50%', fontSize: '14px', fontWeight: 600, color: '#9ca3af', transform: 'rotate(10deg)' }}>PHÚ NHUẬN</div>
-      <div style={{ position: 'absolute', top: '60%', left: '70%', fontSize: '14px', fontWeight: 600, color: '#9ca3af', transform: 'rotate(-5deg)' }}>QUẬN 1</div>
-
-      {/* Markers Mock */}
-      <div style={{ position: 'absolute', top: '25%', left: '40%', fontSize: '32px' }}>📍</div>
-      <div style={{ position: 'absolute', top: '45%', left: '55%', fontSize: '32px' }}>📍</div>
-      <div style={{ position: 'absolute', top: '65%', left: '45%', fontSize: '32px' }}>📍</div>
-      <div style={{ position: 'absolute', top: '35%', left: '75%', fontSize: '32px' }}>📍</div>
-
-      {/* Action Button */}
-      <button style={{
-        position: 'absolute',
-        top: '24px',
-        backgroundColor: 'var(--blue)',
-        color: 'white',
-        padding: '10px 24px',
-        borderRadius: '9999px',
-        fontWeight: 600,
-        fontSize: '14px',
-        boxShadow: 'var(--shadow-md)'
-      }}>
-        Tìm kiếm trong khu vực này
-      </button>
-
-      {/* Map Controls */}
-      <div style={{
-        position: 'absolute',
-        bottom: '24px',
-        right: '24px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '8px'
-      }}>
-        <button style={{ width: '40px', height: '40px', backgroundColor: 'white', borderRadius: '8px', boxShadow: 'var(--shadow-sm)', fontSize: '20px', fontWeight: 'bold' }}>+</button>
-        <button style={{ width: '40px', height: '40px', backgroundColor: 'white', borderRadius: '8px', boxShadow: 'var(--shadow-sm)', fontSize: '20px', fontWeight: 'bold' }}>-</button>
-      </div>
+      {import.meta.env.VITE_VIETMAP_API_KEY ? (
+        <>
+          <div ref={mapContainerRef} style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }} />
+          {/* Action Button */}
+          <button style={{
+            position: 'absolute',
+            top: '24px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            backgroundColor: 'var(--blue)',
+            color: 'white',
+            padding: '10px 24px',
+            borderRadius: '9999px',
+            fontWeight: 600,
+            fontSize: '14px',
+            boxShadow: 'var(--shadow-md)',
+            zIndex: 10
+          }}>
+            Tìm kiếm trong khu vực này
+          </button>
+        </>
+      ) : (
+        <div style={{ padding: '24px', textAlign: 'center', color: 'var(--muted)' }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>🗺️</div>
+          <h3>Chưa cấu hình VietMap API Key</h3>
+          <p>Vui lòng thêm VITE_VIETMAP_API_KEY vào file .env</p>
+        </div>
+      )}
     </div>
   );
 };

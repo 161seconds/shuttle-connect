@@ -21,7 +21,7 @@ export const StatCard: React.FC<StatCardProps> = ({
 }) => {
   return (
     <div style={{
-      backgroundColor: 'white',
+      backgroundColor: 'var(--surface)',
       borderRadius: '16px',
       padding: '20px 16px',
       boxShadow: 'var(--shadow-sm)',

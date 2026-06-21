@@ -9,32 +9,30 @@ interface FeatureCardProps {
 export const FeatureCard: React.FC<FeatureCardProps> = ({ iconUrl, title, text }) => {
   return (
     <div style={{
-      backgroundColor: 'white',
-      borderRadius: '24px',
-      padding: '24px 16px',
-      boxShadow: 'var(--shadow-sm)',
-      border: '1px solid var(--border)',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       textAlign: 'center',
-      gap: '16px',
+      gap: '12px',
       height: '100%'
     }}>
       <div style={{
-        width: '64px',
-        height: '64px',
+        width: '48px',
+        height: '48px',
         borderRadius: '50%',
         backgroundColor: 'var(--soft-bg)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        fontSize: '32px'
+        fontSize: '24px',
+        color: 'var(--blue)'
       }}>
         {iconUrl}
       </div>
-      <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--navy)', margin: 0 }}>{title}</h3>
-      <p style={{ fontSize: '14px', color: 'var(--muted)', margin: 0, lineHeight: 1.6 }}>{text}</p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--navy)', margin: 0, lineHeight: 1.3 }}>{title}</h3>
+        {text && <p style={{ fontSize: '13px', color: 'var(--muted)', margin: 0, lineHeight: 1.4 }}>{text}</p>}
+      </div>
     </div>
   );
 };

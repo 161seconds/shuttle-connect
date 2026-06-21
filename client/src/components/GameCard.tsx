@@ -9,7 +9,7 @@ interface GameCardProps {
 export const GameCard: React.FC<GameCardProps> = ({ game }) => {
   return (
     <div style={{
-      backgroundColor: 'white',
+      backgroundColor: 'var(--surface)',
       borderRadius: '24px',
       overflow: 'hidden',
       border: '1px solid var(--border)',
