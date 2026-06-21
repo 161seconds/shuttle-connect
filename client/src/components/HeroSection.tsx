@@ -24,8 +24,8 @@ export const HeroSection: React.FC = () => {
         right: '-10%',
         width: '60%',
         height: '140%',
-        borderLeft: '4px solid rgba(255,255,255,0.8)',
-        borderTop: '4px solid rgba(255,255,255,0.8)',
+        borderLeft: '4px solid var(--border)',
+        borderTop: '4px solid var(--border)',
         borderRadius: '80px 0 0 0',
         transform: 'rotate(-15deg)',
         pointerEvents: 'none'
@@ -41,7 +41,7 @@ export const HeroSection: React.FC = () => {
           Tìm kiếm nhanh chóng sân cầu lông chất lượng, đặt sân dễ dàng và kết nối cộng đồng yêu cầu lông.
         </p>
         <div className="flex gap-4">
-          <button onClick={() => navigate('/explore')} className="btn btn-primary" style={{ padding: '12px 24px', fontSize: '15px', boxShadow: '0 4px 12px rgba(13, 92, 255, 0.2)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button onClick={() => navigate('/explore')} className="btn btn-primary" style={{ padding: '12px 24px', fontSize: '15px', boxShadow: 'var(--shadow-md)', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <SearchIcon size={18} /> Khám phá ngay
           </button>
           <button onClick={() => navigate('/host')} className="btn btn-outline" style={{ padding: '12px 24px', fontSize: '15px', boxShadow: 'var(--shadow-sm)', display: 'flex', alignItems: 'center', gap: '8px' }}>

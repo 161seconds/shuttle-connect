@@ -26,14 +26,14 @@ export const ExplorePage: React.FC = () => {
   }, [filters]);
 
   return (
-    <div className="layout-container py-8 flex gap-6" style={{ height: 'calc(100vh - 70px)' }}>
+    <div className="container py-8 explore-layout" style={{ height: 'calc(100vh - 70px)' }}>
       {/* Left Sidebar */}
-      <div style={{ width: '300px', flexShrink: 0, overflowY: 'auto' }}>
+      <div style={{ width: '100%', maxWidth: '300px', flexShrink: 0, overflowY: 'auto' }}>
         <SearchFilters filters={filters} onFilterChange={setFilters} />
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-col flex-1 gap-6" style={{ overflowY: 'auto' }}>
+      <div className="flex-col flex-1" style={{ display: 'flex', gap: '24px', overflowY: 'auto', minWidth: 0 }}>
         <div style={{ height: '400px', flexShrink: 0 }}>
           <MapView />
         </div>

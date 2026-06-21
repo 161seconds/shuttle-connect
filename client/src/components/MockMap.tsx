@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import vietmapgl from '@vietmap/vietmap-gl-js/dist/vietmap-gl';
 import '@vietmap/vietmap-gl-js/dist/vietmap-gl.css';
 import type { GamePost } from '../types';
+import { MapMapIcon } from './icons';
 
 interface MockMapProps {
   games?: GamePost[];
@@ -11,6 +12,7 @@ interface MockMapProps {
 export const MockMap: React.FC<MockMapProps> = ({ games = [] }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const [, setMap] = useState<any>(null);
+  const [theme, setTheme] = useState(document.documentElement.getAttribute('data-theme') || 'dark');
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
@@ -25,7 +27,7 @@ export const MockMap: React.FC<MockMapProps> = ({ games = [] }) => {
 
     const mapInstance = new vietmapgl.Map({
       container: mapContainerRef.current,
-      style: `https://maps.vietmap.vn/api/maps/light/styles.json?apikey=${apiKey}`,
+      style: `https://maps.vietmap.vn/api/maps/light/styles.json?apikey=${apiKey}`, // Always use light as base
       center: [106.68, 10.76], // HCMC center
       zoom: 11,
       pitch: 0,
@@ -39,7 +41,15 @@ export const MockMap: React.FC<MockMapProps> = ({ games = [] }) => {
       games.forEach(game => {
         if (game.lat && game.lng) {
           const el = document.createElement('div');
-          el.innerHTML = '<div style="font-size: 32px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); cursor: pointer;">📍</div>';
+          // SVG for MapPinIcon directly in innerHTML
+          el.innerHTML = `
+            <div style="cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); color: var(--blue);">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="var(--surface)" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </div>
+          `;
           
           el.addEventListener('click', () => {
             new vietmapgl.Popup({ offset: 25 })
@@ -72,6 +82,15 @@ export const MockMap: React.FC<MockMapProps> = ({ games = [] }) => {
     };
   }, [games]);
 
+  useEffect(() => {
+    const handleThemeChange = () => {
+      setTheme(document.documentElement.getAttribute('data-theme') || 'dark');
+    };
+    
+    window.addEventListener('theme-change', handleThemeChange);
+    return () => window.removeEventListener('theme-change', handleThemeChange);
+  }, []);
+
   return (
     <div style={{
       width: '100%',
@@ -87,7 +106,17 @@ export const MockMap: React.FC<MockMapProps> = ({ games = [] }) => {
     }}>
       {import.meta.env.VITE_VIETMAP_API_KEY ? (
         <>
-          <div ref={mapContainerRef} style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }} />
+          <div 
+            ref={mapContainerRef} 
+            style={{ 
+              width: '100%', 
+              height: '100%', 
+              position: 'absolute', 
+              inset: 0,
+              filter: theme === 'dark' ? 'invert(100%) hue-rotate(180deg) saturate(1.5) brightness(0.9) contrast(0.9)' : 'none',
+              transition: 'filter 0.3s ease'
+            }} 
+          />
           {/* Action Button */}
           <button style={{
             position: 'absolute',
@@ -107,8 +136,10 @@ export const MockMap: React.FC<MockMapProps> = ({ games = [] }) => {
           </button>
         </>
       ) : (
-        <div style={{ padding: '24px', textAlign: 'center', color: 'var(--muted)' }}>
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>🗺️</div>
+        <div style={{ padding: '24px', textAlign: 'center', color: 'var(--muted)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <MapMapIcon size={48} />
+          </div>
           <h3>Chưa cấu hình VietMap API Key</h3>
           <p>Vui lòng thêm VITE_VIETMAP_API_KEY vào file .env</p>
         </div>

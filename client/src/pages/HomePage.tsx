@@ -29,7 +29,7 @@ export const HomePage: React.FC = () => {
   return (
     <div className="container" style={{ padding: '32px 24px', width: '100%', maxWidth: '1440px', margin: '0 auto' }}>
       {/* Layout uses a 1fr 1fr grid or something similar for the two main columns */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', alignItems: 'start' }}>
+      <div className="home-grid">
 
         {/* Left Column (50%) */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', minWidth: 0 }}>
@@ -37,10 +37,10 @@ export const HomePage: React.FC = () => {
 
           {/* Stats Row */}
           <div className="grid grid-cols-4 gap-4">
-            <StatCard iconUrl={<CalendarIcon size={24} />} iconBgColor="#e5f7ed" iconColor="#18b365" label="Sân đang mở" number="128" subtext="+12 hôm nay" />
-            <StatCard iconUrl={<UsersIcon size={24} />} iconBgColor="#e5edf7" iconColor="#0d5cff" label="Người chơi" number="86" subtext="+5 tuần này" />
-            <StatCard iconUrl={<MapPinIcon size={24} />} iconBgColor="#fff4e5" iconColor="#ff8a1f" label="Sân/CLB" number="45+" subtext="quận/huyện" subtextColor="var(--muted)" />
-            <StatCard iconUrl={<ChartIcon size={24} />} iconBgColor="#f3e8ff" iconColor="#7c3aed" label="Lượt tìm kiếm" number="2.4K" subtext="tuần này" subtextColor="var(--muted)" />
+            <StatCard iconUrl={<CalendarIcon size={24} />} iconBgColor="var(--soft-bg)" iconColor="var(--green)" label="Sân đang mở" number="128" subtext="+12 hôm nay" />
+            <StatCard iconUrl={<UsersIcon size={24} />} iconBgColor="var(--soft-bg)" iconColor="var(--blue)" label="Người chơi" number="86" subtext="+5 tuần này" />
+            <StatCard iconUrl={<MapPinIcon size={24} />} iconBgColor="var(--soft-bg)" iconColor="var(--orange)" label="Sân/CLB" number="45+" subtext="quận/huyện" subtextColor="var(--muted)" />
+            <StatCard iconUrl={<ChartIcon size={24} />} iconBgColor="var(--soft-bg)" iconColor="var(--purple)" label="Lượt tìm kiếm" number="2.4K" subtext="tuần này" subtextColor="var(--muted)" />
           </div>
 
           {/* Features Section */}

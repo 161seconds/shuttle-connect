@@ -12,12 +12,12 @@ interface StatCardProps {
 
 export const StatCard: React.FC<StatCardProps> = ({ 
   iconUrl, 
-  iconBgColor = '#e5edf7',
-  iconColor = '#0d5cff',
+  iconBgColor = 'var(--soft-bg)',
+  iconColor = 'var(--blue)',
   label, 
   number, 
   subtext,
-  subtextColor = '#18b365'
+  subtextColor = 'var(--green)'
 }) => {
   return (
     <div style={{

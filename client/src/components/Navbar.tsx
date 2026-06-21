@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { BellIcon } from './icons';
+import { BellIcon, BadmintonIcon, SunIcon, MoonIcon } from './icons';
 import { useAuth } from '../contexts/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -11,12 +11,14 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ onOpenLogin }) => {
   const { role, logout } = useAuth();
   const location = useLocation();
-  const [theme, setTheme] = useState(document.documentElement.getAttribute('data-theme') || 'light');
+  const [theme, setTheme] = useState(document.documentElement.getAttribute('data-theme') || 'dark');
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
+    // Dispatch a custom event to notify other components (like MockMap) of theme changes
+    window.dispatchEvent(new Event('theme-change'));
   };
 
   useEffect(() => {
@@ -36,8 +38,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenLogin }) => {
         {/* Logo Area */}
         <Link to="/" className="flex items-center gap-2" style={{ textDecoration: 'none' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--navy)', fontWeight: 800, fontSize: '20px', letterSpacing: '-0.5px' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: '10px', backgroundColor: 'var(--blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '20px', boxShadow: 'var(--shadow-sm)' }}>
-              🏸
+            <div style={{ width: '36px', height: '36px', borderRadius: '10px', backgroundColor: 'var(--blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', boxShadow: 'var(--shadow-sm)' }}>
+              <BadmintonIcon size={20} />
             </div>
             Shuttle<span style={{ color: 'var(--blue)' }}>Connect</span>
           </div>
@@ -56,8 +58,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenLogin }) => {
 
         {/* Right side */}
         <div className="flex items-center gap-6">
-          <button onClick={toggleTheme} style={{ color: 'var(--navy)', display: 'flex', fontSize: '18px' }}>
-            {theme === 'light' ? '🌙' : '☀️'}
+          <button onClick={toggleTheme} style={{ color: 'var(--navy)', display: 'flex' }} aria-label="Toggle Theme">
+            {theme === 'light' ? <MoonIcon size={20} /> : <SunIcon size={20} />}
           </button>
           <button style={{ color: 'var(--navy)', display: 'flex' }}><BellIcon size={24} /></button>
           
