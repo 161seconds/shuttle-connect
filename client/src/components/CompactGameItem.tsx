@@ -14,7 +14,7 @@ export const CompactGameItem: React.FC<CompactGameItemProps> = ({ game }) => {
       padding: '16px',
       borderBottom: '1px solid var(--border)',
       alignItems: 'center',
-      backgroundColor: 'white',
+      backgroundColor: 'var(--surface)',
       borderRadius: '16px',
       marginBottom: '12px',
       boxShadow: 'var(--shadow-sm)'
@@ -23,7 +23,8 @@ export const CompactGameItem: React.FC<CompactGameItemProps> = ({ game }) => {
         width: '100px',
         height: '100px',
         borderRadius: '12px',
-        backgroundColor: '#cbd5e1',
+        backgroundColor: 'var(--soft-bg)',
+        border: '1px solid var(--border)',
         position: 'relative',
         flexShrink: 0
       }}>

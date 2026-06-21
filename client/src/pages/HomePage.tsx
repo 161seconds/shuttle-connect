@@ -36,15 +36,17 @@ export const HomePage: React.FC = () => {
           <HeroSection />
 
           {/* Stats Row */}
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-4 gap-4 reveal-on-scroll">
             <StatCard iconUrl={<CalendarIcon size={24} />} iconBgColor="var(--soft-bg)" iconColor="var(--green)" label="Sân đang mở" number="128" subtext="+12 hôm nay" />
             <StatCard iconUrl={<UsersIcon size={24} />} iconBgColor="var(--soft-bg)" iconColor="var(--blue)" label="Người chơi" number="86" subtext="+5 tuần này" />
             <StatCard iconUrl={<MapPinIcon size={24} />} iconBgColor="var(--soft-bg)" iconColor="var(--orange)" label="Sân/CLB" number="45+" subtext="quận/huyện" subtextColor="var(--muted)" />
             <StatCard iconUrl={<ChartIcon size={24} />} iconBgColor="var(--soft-bg)" iconColor="var(--purple)" label="Lượt tìm kiếm" number="2.4K" subtext="tuần này" subtextColor="var(--muted)" />
+            <StatCard iconUrl={<StarIcon size={24} />} iconBgColor="var(--soft-bg)" iconColor="var(--warning)" label="Đánh giá tốt" number="4.8/5" subtext="từ người chơi" subtextColor="var(--muted)" />
+            <StatCard iconUrl={<ShieldIcon size={24} />} iconBgColor="var(--soft-bg)" iconColor="var(--red)" label="Trận thành công" number="95%" subtext="tỷ lệ ghép trận" subtextColor="var(--green)" />
           </div>
 
           {/* Features Section */}
-          <div className="grid grid-cols-5 gap-3" style={{ padding: '8px 0' }}>
+          <div className="grid grid-cols-5 gap-3 reveal-on-scroll" style={{ padding: '8px 0' }}>
             <FeatureCard iconUrl={<SearchIcon size={24} color="var(--blue)" />} title="Tìm kiếm nhanh" text="" />
             <FeatureCard iconUrl={<CalendarIcon size={24} color="var(--blue)" />} title="Đặt sân dễ dàng" text="" />
             <FeatureCard iconUrl={<StarIcon size={24} color="var(--blue)" />} title="Chất lượng uy tín" text="" />
@@ -52,10 +54,12 @@ export const HomePage: React.FC = () => {
             <FeatureCard iconUrl={<ShieldIcon size={24} color="var(--blue)" />} title="Ưu đãi hấp dẫn" text="" />
           </div>
 
-          <PromoBanner />
+          <div className="reveal-on-scroll">
+            <PromoBanner />
+          </div>
 
           {/* Featured Games Section */}
-          <div>
+          <div className="reveal-on-scroll">
             <div className="flex justify-between items-center" style={{ marginBottom: '20px' }}>
               <h2 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--navy)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 Sân gợi ý cho bạn
@@ -69,7 +73,7 @@ export const HomePage: React.FC = () => {
           </div>
 
           {/* Trust Badges */}
-          <div style={{
+          <div className="reveal-on-scroll" style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',

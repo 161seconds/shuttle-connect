@@ -45,9 +45,9 @@ export const StatCard: React.FC<StatCardProps> = ({
         {iconUrl}
       </div>
       <div style={{ minWidth: 0 }}>
-        <div style={{ fontSize: '13px', color: 'var(--navy)', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{label}</div>
+        <div style={{ fontSize: '13px', color: 'var(--navy)', fontWeight: 600 }}>{label}</div>
         <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text)', lineHeight: 1.2 }}>{number}</div>
-        <div style={{ fontSize: '12px', color: subtextColor, marginTop: '2px', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{subtext}</div>
+        <div style={{ fontSize: '12px', color: subtextColor, marginTop: '2px', fontWeight: 500 }}>{subtext}</div>
       </div>
     </div>
   );
