@@ -4,24 +4,44 @@ import { MapPinIcon, ClockIcon, UsersIcon, BookmarkIcon } from './icons';
 
 interface GameCardProps {
   game: GamePost;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  onClick?: () => void;
 }
 
-export const GameCard: React.FC<GameCardProps> = ({ game }) => {
+export const GameCard: React.FC<GameCardProps> = ({ game, onMouseEnter, onMouseLeave, onClick }) => {
   return (
-    <div style={{
-      backgroundColor: 'var(--surface)',
-      borderRadius: '24px',
-      overflow: 'hidden',
-      border: '1px solid var(--border)',
-      boxShadow: 'var(--shadow-sm)',
-      display: 'flex',
-      flexDirection: 'column',
-      position: 'relative'
-    }}>
+    <div 
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onClick={onClick}
+      style={{
+        backgroundColor: 'var(--surface)',
+        borderRadius: '24px',
+        overflow: 'hidden',
+        border: '1px solid var(--border)',
+        boxShadow: 'var(--shadow-sm)',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+        cursor: onClick ? 'pointer' : 'default',
+        viewTransitionName: `game-card-morph-${game.id}`,
+        transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s',
+      }}
+      onMouseOver={(e) => {
+        e.currentTarget.style.transform = 'translateY(-4px)';
+        e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+      }}
+      onMouseOut={(e) => {
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+      }}
+    >
       {/* Image Placeholder */}
       <div style={{
         height: '160px',
-        backgroundColor: '#cbd5e1',
+        backgroundColor: 'var(--soft-bg)',
+        borderBottom: '1px solid var(--border)',
         position: 'relative'
       }}>
         {/* Slot Badge */}

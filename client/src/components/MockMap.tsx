@@ -7,19 +7,21 @@ import { MapMapIcon } from './icons';
 
 interface MockMapProps {
   games?: GamePost[];
+  hoveredGameId?: string | null;
 }
 
-export const MockMap: React.FC<MockMapProps> = ({ games = [] }) => {
+export const MockMap: React.FC<MockMapProps> = ({ games = [], hoveredGameId }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const [, setMap] = useState<any>(null);
+  const [map, setMap] = useState<any>(null);
   const [theme, setTheme] = useState(document.documentElement.getAttribute('data-theme') || 'dark');
+  const markersRef = useRef<{ [key: string]: any }>({});
+  const domElementsRef = useRef<{ [key: string]: HTMLDivElement }>({});
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
     const apiKey = import.meta.env.VITE_VIETMAP_API_KEY || '';
     
-    // Fallback if no API key
     if (!apiKey) {
       console.warn("No VietMap API key found");
       return;
@@ -27,23 +29,21 @@ export const MockMap: React.FC<MockMapProps> = ({ games = [] }) => {
 
     const mapInstance = new vietmapgl.Map({
       container: mapContainerRef.current,
-      style: `https://maps.vietmap.vn/api/maps/light/styles.json?apikey=${apiKey}`, // Always use light as base
-      center: [106.68, 10.76], // HCMC center
+      style: `https://maps.vietmap.vn/api/maps/light/styles.json?apikey=${apiKey}`, 
+      center: [106.68, 10.76], 
       zoom: 11,
-      pitch: 0,
+      pitch: 45, // Overdrive: Add 3D pitch
       bearing: 0
     });
 
     mapInstance.on('load', () => {
       setMap(mapInstance);
       
-      // Add markers
       games.forEach(game => {
         if (game.lat && game.lng) {
           const el = document.createElement('div');
-          // SVG for MapPinIcon directly in innerHTML
           el.innerHTML = `
-            <div style="cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); color: var(--blue);">
+            <div style="cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); color: var(--blue); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="var(--surface)" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                 <circle cx="12" cy="10" r="3"></circle>
@@ -51,28 +51,13 @@ export const MockMap: React.FC<MockMapProps> = ({ games = [] }) => {
             </div>
           `;
           
-          el.addEventListener('click', () => {
-            new vietmapgl.Popup({ offset: 25 })
-              .setDOMContent(
-                (function() {
-                  const div = document.createElement('div');
-                  div.innerHTML = `
-                    <div style="padding: 4px; font-family: sans-serif; color: #111827;">
-                      <h4 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 700;">${game.courtName}</h4>
-                      <p style="margin: 0 0 4px 0; font-size: 12px; color: #666;">${game.startTime} - ${game.endTime}</p>
-                      <p style="margin: 0; font-size: 12px; font-weight: bold; color: #0d5cff;">${game.price.toLocaleString()}đ</p>
-                    </div>
-                  `;
-                  return div;
-                })()
-              )
-              .setLngLat([game.lng!, game.lat!])
-              .addTo(mapInstance);
-          });
+          domElementsRef.current[game.id] = el.firstElementChild as HTMLDivElement;
 
-          new vietmapgl.Marker({ element: el })
+          const marker = new vietmapgl.Marker({ element: el })
             .setLngLat([game.lng, game.lat])
             .addTo(mapInstance);
+            
+          markersRef.current[game.id] = marker;
         }
       });
     });
@@ -81,6 +66,38 @@ export const MockMap: React.FC<MockMapProps> = ({ games = [] }) => {
       mapInstance.remove();
     };
   }, [games]);
+
+  useEffect(() => {
+    if (!map || !hoveredGameId) return;
+
+    // Reset all markers
+    Object.values(domElementsRef.current).forEach(el => {
+      el.style.transform = 'scale(1)';
+      el.style.animation = 'none';
+      el.style.color = 'var(--blue)';
+    });
+
+    const activeGame = games.find(g => g.id === hoveredGameId);
+    if (activeGame && activeGame.lat && activeGame.lng) {
+      // Cinematic Fly-to
+      map.flyTo({
+        center: [activeGame.lng, activeGame.lat],
+        zoom: 13,
+        speed: 1.2,
+        curve: 1.4,
+        pitch: 60,
+        essential: true 
+      });
+
+      // Animate Active Marker
+      const activeEl = domElementsRef.current[hoveredGameId];
+      if (activeEl) {
+        activeEl.style.color = 'var(--warning)';
+        activeEl.style.animation = 'map-pulse 2s infinite';
+        activeEl.style.borderRadius = '50%';
+      }
+    }
+  }, [hoveredGameId, map, games]);
 
   useEffect(() => {
     const handleThemeChange = () => {

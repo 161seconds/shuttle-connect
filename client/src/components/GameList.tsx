@@ -4,9 +4,11 @@ import { GameCard } from './GameCard';
 
 interface GameListProps {
   posts: GamePost[];
+  onHover?: (gameId: string | null) => void;
+  onClick?: (game: GamePost) => void;
 }
 
-export const GameList: React.FC<GameListProps> = ({ posts }) => {
+export const GameList: React.FC<GameListProps> = ({ posts, onHover, onClick }) => {
   if (posts.length === 0) {
     return <div className="text-center text-muted mt-8">No games found matching your criteria.</div>;
   }
@@ -14,7 +16,14 @@ export const GameList: React.FC<GameListProps> = ({ posts }) => {
   return (
     <div className="flex flex-col gap-4">
       {posts.map(post => (
-        <GameCard key={post.id} game={post as any} />
+        <div key={post.id} className="reveal-on-scroll">
+          <GameCard 
+            game={post as any} 
+            onMouseEnter={() => onHover && onHover(post.id)}
+            onMouseLeave={() => onHover && onHover(null)}
+            onClick={() => onClick && onClick(post as any)}
+          />
+        </div>
       ))}
     </div>
   );

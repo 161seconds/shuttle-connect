@@ -24,12 +24,28 @@ export const HeroSection: React.FC = () => {
         right: '-10%',
         width: '60%',
         height: '140%',
-        borderLeft: '4px solid var(--border)',
-        borderTop: '4px solid var(--border)',
         borderRadius: '80px 0 0 0',
         transform: 'rotate(-15deg)',
-        pointerEvents: 'none'
-      }} />
+        pointerEvents: 'none',
+        background: 'var(--blue)',
+        overflow: 'hidden'
+      }}>
+        <svg width="0" height="0" style={{ position: 'absolute' }}>
+          <filter id="noise">
+            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+            <feColorMatrix type="matrix" values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 0.15 0" />
+          </filter>
+        </svg>
+        <div style={{
+          position: 'absolute',
+          inset: '-50%',
+          background: 'var(--blue)',
+          backgroundImage: 'radial-gradient(var(--blue-dark) 2px, transparent 2px)',
+          backgroundSize: '32px 32px',
+          animation: 'noise-drift 20s linear infinite',
+          filter: 'url(#noise)'
+        }}></div>
+      </div>
 
       {/* Content */}
       <div style={{ maxWidth: '480px', position: 'relative', zIndex: 10 }}>

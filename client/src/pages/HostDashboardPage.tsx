@@ -40,7 +40,7 @@ export const HostDashboardPage: React.FC = () => {
           <div className="card mt-8" style={{ background: 'var(--soft-bg)' }}>
             <h3 className="font-bold text-lg mb-2">Facebook API Status</h3>
             <p className="text-sm text-muted">
-              Official Facebook Page API integration is planned for a future release. Group scraping is not supported to comply with policies.
+              Tính năng tự động kéo bài từ Facebook Group/Page đang được phát triển. Tạm thời, hãy copy và dán nội dung bài đăng Facebook của bạn vào ô bên trên nhé.
             </p>
           </div>
         </div>
