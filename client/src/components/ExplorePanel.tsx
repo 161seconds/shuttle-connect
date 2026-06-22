@@ -31,8 +31,8 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({ games = [] }) => {
         borderBottom: '1px solid var(--border)'
       }}>
         <div style={{ flex: '1 1 150px', position: 'relative' }}>
-          <span style={{ position: 'absolute', left: '10px', top: '8px', color: 'var(--muted)', display: 'flex' }}><SearchIcon size={14} /></span>
-          <input type="text" placeholder="Tìm sân..." style={{ width: '100%', paddingLeft: '32px', fontSize: '13px' }} />
+          <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', display: 'flex' }}><SearchIcon size={16} /></span>
+          <input type="text" placeholder="Tìm sân..." style={{ width: '100%', paddingLeft: '36px', fontSize: '13px' }} />
         </div>
         <select style={{ flex: '1 1 100px', fontSize: '13px' }}><option>Quận/huyện</option></select>
         <input type="date" value="2025-05-23" style={{ flex: '1 1 110px', fontSize: '13px' }} onChange={()=>{}}/>

@@ -46,12 +46,11 @@ export const HomePage: React.FC = () => {
           </div>
 
           {/* Features Section */}
-          <div className="grid grid-cols-5 gap-3 reveal-on-scroll" style={{ padding: '8px 0' }}>
+          <div className="grid gap-3 reveal-on-scroll" style={{ padding: '8px 0', gridTemplateColumns: 'repeat(4, 1fr)' }}>
             <FeatureCard iconUrl={<SearchIcon size={24} color="var(--blue)" />} title="Tìm kiếm nhanh" text="" />
             <FeatureCard iconUrl={<CalendarIcon size={24} color="var(--blue)" />} title="Đặt sân dễ dàng" text="" />
             <FeatureCard iconUrl={<StarIcon size={24} color="var(--blue)" />} title="Chất lượng uy tín" text="" />
             <FeatureCard iconUrl={<UsersIcon size={24} color="var(--blue)" />} title="Cộng đồng cầu lông" text="" />
-            <FeatureCard iconUrl={<ShieldIcon size={24} color="var(--blue)" />} title="Ưu đãi hấp dẫn" text="" />
           </div>
 
           <div className="reveal-on-scroll">

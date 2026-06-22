@@ -20,7 +20,7 @@ export const StatCard: React.FC<StatCardProps> = ({
   subtextColor = 'var(--green)'
 }) => {
   return (
-    <div style={{
+    <div className="hover-lift" style={{
       backgroundColor: 'var(--surface)',
       borderRadius: '16px',
       padding: '20px 16px',
@@ -28,9 +28,10 @@ export const StatCard: React.FC<StatCardProps> = ({
       display: 'flex',
       alignItems: 'center',
       gap: '12px',
-      border: '1px solid var(--border)'
+      border: '1px solid var(--border)',
+      cursor: 'default'
     }}>
-      <div style={{
+      <div className="hover-scale-icon" style={{
         width: '48px',
         height: '48px',
         borderRadius: '50%',

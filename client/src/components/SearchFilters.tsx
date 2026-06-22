@@ -21,27 +21,23 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onFilterC
   };
 
   return (
-    <div className="card flex-col gap-4">
-      <h3 className="font-bold text-lg mb-4">Filters</h3>
-      <div className="flex flex-col gap-2 mb-4">
-        <label className="text-sm font-bold">District</label>
-        <select name="district" value={filters.district || ''} onChange={handleChange}>
-          <option value="">All Districts</option>
-          <option value="District 1">District 1</option>
-          <option value="District 11">District 11</option>
-          <option value="Tan Binh">Tan Binh</option>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
+      <div style={{ flex: '1 1 120px' }}>
+        <select name="district" value={filters.district || ''} onChange={handleChange} style={{ width: '100%', padding: '8px 12px', fontSize: '13px' }}>
+          <option value="">Quận/huyện</option>
+          <option value="District 1">Quận 1</option>
+          <option value="District 11">Quận 11</option>
+          <option value="Tan Binh">Tân Bình</option>
         </select>
       </div>
 
-      <div className="flex flex-col gap-2 mb-4">
-        <label className="text-sm font-bold">Date</label>
-        <input type="date" name="date" value={filters.date || ''} onChange={handleChange} />
+      <div style={{ flex: '1 1 140px' }}>
+        <input type="date" name="date" value={filters.date || ''} onChange={handleChange} style={{ width: '100%', padding: '8px 12px', fontSize: '13px' }} />
       </div>
 
-      <div className="flex flex-col gap-2 mb-4">
-        <label className="text-sm font-bold">Skill Level</label>
-        <select name="skillLevel" value={filters.skillLevel || ''} onChange={handleChange}>
-          <option value="">All Levels</option>
+      <div style={{ flex: '1 1 120px' }}>
+        <select name="skillLevel" value={filters.skillLevel || ''} onChange={handleChange} style={{ width: '100%', padding: '8px 12px', fontSize: '13px' }}>
+          <option value="">Trình độ</option>
           <option value="yếu">Yếu</option>
           <option value="trung bình">Trung bình</option>
           <option value="khá">Khá</option>
@@ -49,14 +45,13 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onFilterC
         </select>
       </div>
 
-      <div className="flex flex-col gap-2 mb-4">
-        <label className="text-sm font-bold">Max Price (VND)</label>
-        <input type="number" name="maxPrice" placeholder="e.g. 100000" value={filters.maxPrice || ''} onChange={handleChange} />
+      <div style={{ flex: '1 1 120px' }}>
+        <input type="number" name="maxPrice" placeholder="Giá tối đa..." value={filters.maxPrice || ''} onChange={handleChange} style={{ width: '100%', padding: '8px 12px', fontSize: '13px' }} />
       </div>
 
-      <div className="flex items-center gap-2 mb-4">
-        <input type="checkbox" id="availableSlots" name="availableSlotsOnly" checked={filters.availableSlotsOnly || false} onChange={handleChange} />
-        <label htmlFor="availableSlots" className="text-sm cursor-pointer">Available slots only</label>
+      <div style={{ flex: '1 1 100%', display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+        <input type="checkbox" id="availableSlots" name="availableSlotsOnly" checked={filters.availableSlotsOnly || false} onChange={handleChange} style={{ width: '16px', height: '16px' }} />
+        <label htmlFor="availableSlots" className="text-sm cursor-pointer font-bold">Chỉ sân còn slot</label>
       </div>
     </div>
   );
