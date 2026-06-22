@@ -3,6 +3,7 @@ import type { SearchFilters as ISearchFilters, GamePost } from '../types';
 import { SearchFilters } from '../components/SearchFilters';
 import { GameList } from '../components/GameList';
 import { MockMap } from '../components/MockMap';
+import { SkeletonGameCard } from '../components/SkeletonGameCard';
 import { api } from '../api';
 
 export const ExplorePage: React.FC = () => {
@@ -70,7 +71,11 @@ export const ExplorePage: React.FC = () => {
             <h3 className="font-bold text-lg">Kết quả ({loading ? '...' : posts.length})</h3>
           </div>
           {loading ? (
-            <p className="text-muted">Đang tải...</p>
+            <div className="flex flex-col gap-4">
+              <SkeletonGameCard />
+              <SkeletonGameCard />
+              <SkeletonGameCard />
+            </div>
           ) : (
             <GameList posts={posts} onHover={setHoveredGameId} onClick={handleGameClick} />
           )}

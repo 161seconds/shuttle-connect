@@ -8,8 +8,8 @@ The YAML frontmatter is the machine-readable layer. It's what Stitch's linter va
 
 ```yaml
 ---
-name: <project title>
-description: <one-line tagline>
+name: Shuttle Connect
+description: Social badminton booking and community app
 colors:
   primary: "#b8422e"
   neutral-bg: "#faf7f2"

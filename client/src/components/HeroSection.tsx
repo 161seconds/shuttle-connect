@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SearchIcon, PlusIcon } from './icons';
+import { SearchIcon, BadmintonIcon } from './icons';
 import { LightRays } from './LightRays';
 
 export const HeroSection: React.FC = () => {
@@ -45,14 +45,35 @@ export const HeroSection: React.FC = () => {
         <p style={{ fontSize: '15px', color: 'var(--muted)', marginBottom: '32px', lineHeight: 1.6, fontWeight: 500 }}>
           Tìm kiếm nhanh chóng sân cầu lông chất lượng, đặt sân dễ dàng và kết nối cộng đồng yêu cầu lông.
         </p>
-        <div className="flex gap-4">
-          <button onClick={() => navigate('/explore')} className="btn btn-primary" style={{ padding: '12px 24px', fontSize: '15px', boxShadow: 'var(--shadow-md)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <SearchIcon size={18} /> Khám phá ngay
-          </button>
-          <button onClick={() => navigate('/host')} className="btn btn-outline" style={{ padding: '12px 24px', fontSize: '15px', boxShadow: 'var(--shadow-sm)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <PlusIcon size={18} /> Đăng ký ngay
+        <div style={{
+          display: 'flex',
+          backgroundColor: 'var(--surface)',
+          backdropFilter: 'blur(12px)',
+          border: '1px solid var(--border)',
+          borderRadius: '16px',
+          padding: '8px',
+          gap: '8px',
+          boxShadow: 'var(--shadow-lg)',
+          marginTop: '8px'
+        }}>
+          <select style={{ flex: 1, backgroundColor: 'var(--soft-bg)', border: '1px solid transparent', borderRadius: '10px' }}>
+            <option>Quận/huyện</option>
+            <option>Quận 1</option>
+            <option>Bình Thạnh</option>
+          </select>
+          <input type="date" style={{ flex: 1, backgroundColor: 'var(--soft-bg)', border: '1px solid transparent', borderRadius: '10px' }} />
+          <button onClick={() => navigate('/explore')} className="btn btn-primary" style={{ padding: '12px 24px', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <SearchIcon size={18} /> Tìm sân
           </button>
         </div>
+      </div>
+
+      {/* Floating Elements */}
+      <div style={{ position: 'absolute', top: '15%', left: '45%', zIndex: 1, animation: 'floatSlow 4s ease-in-out infinite', opacity: 0.5, color: 'var(--blue)' }}>
+        <BadmintonIcon size={48} />
+      </div>
+      <div style={{ position: 'absolute', bottom: '20%', left: '40%', zIndex: 1, animation: 'floatFast 3s ease-in-out infinite', opacity: 0.3, color: 'var(--green)', transform: 'rotate(45deg)' }}>
+        <BadmintonIcon size={32} />
       </div>
 
       {/* Player Visual from Unsplash */}
