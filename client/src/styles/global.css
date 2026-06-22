@@ -385,3 +385,32 @@ input[type="date"]::-webkit-datetime-edit {
   border-radius: 4px;
 }
 
+/* Overdrive: Hero Parallax */
+@supports (animation-timeline: scroll()) {
+  .hero-parallax-fast {
+    animation: hero-scroll-fast linear;
+    animation-timeline: scroll(root);
+  }
+  .hero-parallax-slow {
+    animation: hero-scroll-slow linear;
+    animation-timeline: scroll(root);
+  }
+  .hero-parallax-fade {
+    animation: hero-fade linear;
+    animation-timeline: scroll(root);
+  }
+}
+
+@keyframes hero-scroll-fast {
+  0% { transform: translateY(0) translateZ(50px); }
+  100% { transform: translateY(-150px) translateZ(50px); }
+}
+@keyframes hero-scroll-slow {
+  0% { transform: translateY(0) translateZ(-50px); }
+  100% { transform: translateY(80px) translateZ(-50px); }
+}
+@keyframes hero-fade {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+

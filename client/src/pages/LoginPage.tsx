@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { BadmintonIcon } from '../components/icons';
@@ -7,7 +7,36 @@ import { LightRays } from '../components/LightRays';
 export const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+  
+  const [step, setStep] = useState<1 | 2>(1);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (step === 1 && emailInputRef.current) {
+      emailInputRef.current.focus();
+    } else if (step === 2 && passwordInputRef.current) {
+      passwordInputRef.current.focus();
+    }
+  }, [step]);
+
+  const handleNext = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email.trim().length > 0) {
+      setStep(2);
+    }
+  };
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Default to player if real login used
+    login('PLAYER');
+    navigate('/');
+  };
 
   const handleMockLogin = (role: 'PLAYER' | 'HOST' | 'ADMIN') => {
     login(role);
@@ -16,255 +45,207 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div style={{
-      display: 'flex',
+      position: 'relative',
       width: '100vw',
       height: '100vh',
-      backgroundColor: 'var(--surface)',
-      overflow: 'hidden'
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#07152f',
+      overflow: 'hidden',
+      color: 'white',
+      fontFamily: 'Inter, sans-serif'
     }}>
-      {/* Left Side: Visual / Branding */}
+      <style>
+        {`
+          @keyframes floatSlow {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+          }
+          @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+        `}
+      </style>
+
+      {/* --- BACKGROUND LAYER --- */}
+      {/* Glowing Ambient Orbs */}
       <div style={{
-        flex: 1,
-        background: 'linear-gradient(135deg, #07152f 0%, var(--blue) 100%)',
-        color: 'white',
-        padding: '64px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        <style>
-          {`
-            @keyframes floatSlow {
-              0% { transform: translateY(0px) rotate(0deg); }
-              50% { transform: translateY(-15px) rotate(2deg); }
-              100% { transform: translateY(0px) rotate(0deg); }
-            }
-            @keyframes floatFast {
-              0% { transform: translateY(0px) rotate(0deg); }
-              50% { transform: translateY(-10px) rotate(-2deg); }
-              100% { transform: translateY(0px) rotate(0deg); }
-            }
-          `}
-        </style>
+        position: 'absolute', top: '10%', left: '15%', width: '600px', height: '600px',
+        background: 'rgba(13, 92, 255, 0.25)', borderRadius: '50%', filter: 'blur(120px)', zIndex: 0
+      }} />
+      <div style={{
+        position: 'absolute', bottom: '5%', right: '10%', width: '500px', height: '500px',
+        background: 'rgba(124, 58, 237, 0.25)', borderRadius: '50%', filter: 'blur(100px)', zIndex: 0
+      }} />
 
-        {/* Glowing Ambient Orbs */}
-        <div style={{
-          position: 'absolute', top: '10%', left: '15%', width: '400px', height: '400px',
-          background: 'rgba(56, 189, 248, 0.4)', borderRadius: '50%', filter: 'blur(120px)', zIndex: 0
-        }} />
-        <div style={{
-          position: 'absolute', bottom: '5%', right: '10%', width: '350px', height: '350px',
-          background: 'rgba(139, 92, 246, 0.4)', borderRadius: '50%', filter: 'blur(100px)', zIndex: 0
-        }} />
-
-        {/* Light Rays Background */}
-        <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
-          <LightRays
-            raysOrigin="top-left"
-            raysColor="#ffffff"
-            raysSpeed={1.5}
-            lightSpread={1}
-            rayLength={3}
-            followMouse={true}
-            mouseInfluence={0.15}
-            noiseAmount={0}
-            distortion={0}
-            pulsating={false}
-            fadeDistance={1}
-            saturation={1}
-          />
-        </div>
-
-        {/* Decorative Pattern overlay */}
-        <div style={{
-          position: 'absolute', inset: 0, opacity: 0.1, zIndex: 2,
-          backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
-          backgroundSize: '32px 32px'
-        }} />
-
-        <div style={{ position: 'relative', zIndex: 3 }}>
-          <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', textDecoration: 'none', color: 'white', marginBottom: '64px' }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(8px)' }}>
-              <BadmintonIcon size={24} />
-            </div>
-            <span style={{ fontWeight: 800, fontSize: '24px', letterSpacing: '-0.5px' }}>ShuttleConnect</span>
-          </Link>
-
-          <h1 className="reveal-on-scroll" style={{ fontSize: '56px', fontWeight: 800, lineHeight: 1.15, marginBottom: '24px', letterSpacing: '-1px' }}>
-            Nền tảng kết nối<br/>người chơi cầu lông<br/>hàng đầu.
-          </h1>
-          <p className="reveal-on-scroll" style={{ color: 'rgba(255,255,255,0.85)', fontSize: '18px', lineHeight: 1.6, maxWidth: '480px', animationDelay: '0.1s' }}>
-            Tham gia mạng lưới cầu lông năng động nhất. Đặt sân, tìm đồng đội và trải nghiệm những tính năng vượt trội ngay hôm nay.
-          </p>
-        </div>
-
-        {/* Floating Glassmorphism Cards */}
-        <div style={{ position: 'absolute', right: '8%', top: '35%', zIndex: 4, animation: 'floatSlow 6s ease-in-out infinite' }}>
-          <div style={{ 
-            backgroundColor: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255,255,255,0.2)', padding: '16px 20px', borderRadius: '16px',
-            display: 'flex', alignItems: 'center', gap: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
-          }}>
-            <div style={{ width: '44px', height: '44px', borderRadius: '50%', backgroundColor: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '18px' }}>T</div>
-            <div>
-              <div style={{ fontSize: '15px', fontWeight: 700 }}>Trần Minh Tài</div>
-              <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)' }}>Vừa đăng ký 1 slot vãng lai</div>
-            </div>
-          </div>
-        </div>
-
-        <div style={{ position: 'absolute', right: '15%', top: '55%', zIndex: 4, animation: 'floatFast 5s ease-in-out infinite', animationDelay: '1s' }}>
-          <div style={{ 
-            backgroundColor: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255,255,255,0.2)', padding: '16px 20px', borderRadius: '16px',
-            display: 'flex', alignItems: 'center', gap: '16px', boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
-          }}>
-            <div style={{ width: '44px', height: '44px', borderRadius: '50%', backgroundColor: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '18px' }}>H</div>
-            <div>
-              <div style={{ fontSize: '15px', fontWeight: 700 }}>Hoàng Gia</div>
-              <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)' }}>Vừa tạo kèo sân Viettel lúc 19:00</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="reveal-on-scroll" style={{ position: 'relative', zIndex: 3, display: 'flex', gap: '24px', animationDelay: '0.2s', maxWidth: '500px' }}>
-          <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '24px', borderRadius: '20px', backdropFilter: 'blur(12px)', flex: 1, border: '1px solid rgba(255,255,255,0.15)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
-            <div style={{ fontSize: '36px', fontWeight: 800, marginBottom: '4px', background: 'linear-gradient(to right, #fff, #93c5fd)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>3K+</div>
-            <div style={{ fontSize: '15px', color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>Sân cầu lông</div>
-          </div>
-          <div style={{ backgroundColor: 'rgba(255,255,255,0.1)', padding: '24px', borderRadius: '20px', backdropFilter: 'blur(12px)', flex: 1, border: '1px solid rgba(255,255,255,0.15)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
-            <div style={{ fontSize: '36px', fontWeight: 800, marginBottom: '4px', background: 'linear-gradient(to right, #fff, #a78bfa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>10K+</div>
-            <div style={{ fontSize: '15px', color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>Trận đấu mỗi tháng</div>
-          </div>
-        </div>
+      {/* Light Rays Background */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 1, opacity: 0.8 }}>
+        <LightRays
+          raysOrigin="top-center"
+          raysColor="#ffffff"
+          raysSpeed={1.2}
+          lightSpread={1.5}
+          rayLength={4}
+          followMouse={true}
+          mouseInfluence={0.2}
+          noiseAmount={0.02}
+          distortion={0.05}
+          pulsating={false}
+          fadeDistance={1}
+          saturation={1}
+        />
       </div>
 
-      {/* Right Side: Form */}
-      <div style={{ 
-        flex: '0 0 520px', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        backgroundColor: 'var(--surface)', 
-        position: 'relative', 
-        zIndex: 10, 
-        boxShadow: '-20px 0 40px rgba(0,0,0,0.2)',
-        overflowY: 'auto',
-        padding: '64px 48px'
-      }}>
+      {/* Decorative Pattern overlay */}
+      <div style={{
+        position: 'absolute', inset: 0, opacity: 0.05, zIndex: 2,
+        backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+        backgroundSize: '32px 32px'
+      }} />
+
+      {/* --- FOREGROUND CONTENT --- */}
+      <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: '440px', padding: '0 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
-        {/* Nút quay lại trang chủ */}
-        <Link 
-          to="/" 
-          style={{ 
-            display: 'inline-flex', 
-            alignItems: 'center', 
-            gap: '8px', 
-            color: 'var(--muted)', 
-            textDecoration: 'none', 
-            fontSize: '14px', 
-            fontWeight: 500,
-            marginBottom: '40px',
-            transition: 'color 0.2s',
-            alignSelf: 'flex-start'
-          }}
-          onMouseOver={e => e.currentTarget.style.color = 'var(--text)'}
-          onMouseOut={e => e.currentTarget.style.color = 'var(--muted)'}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M19 12H5"></path>
-            <polyline points="12 19 5 12 12 5"></polyline>
-          </svg>
-          Quay lại trang chủ
+        {/* Logo Header */}
+        <Link to="/" className="hover-lift" style={{ 
+          display: 'inline-flex', alignItems: 'center', gap: '12px', textDecoration: 'none', color: 'white', marginBottom: '40px',
+          animation: 'slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) both'
+        }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '16px', backgroundColor: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.2)', boxShadow: '0 8px 16px rgba(0,0,0,0.2)' }}>
+            <BadmintonIcon size={28} />
+          </div>
+          <span style={{ fontWeight: 800, fontSize: '28px', letterSpacing: '-0.5px' }}>ShuttleConnect</span>
         </Link>
 
+        {/* Glassmorphism Form Container */}
         <div style={{
           width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          animation: 'reveal 0.4s ease-out',
-          flex: 1,
-          justifyContent: 'center'
+          backgroundColor: 'rgba(255,255,255,0.06)',
+          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
+          border: '1px solid rgba(255,255,255,0.15)',
+          borderRadius: '24px',
+          boxShadow: '0 30px 60px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)',
+          position: 'relative',
+          overflow: 'hidden',
+          animation: 'slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both'
         }}>
           
-          {/* Header */}
-          <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-            <h1 style={{ 
-              fontSize: '40px', 
-              fontWeight: 700, 
-              color: 'var(--text)', 
-              marginBottom: '12px',
-              letterSpacing: '-1px'
-            }}>
-              Chào mừng trở lại
-            </h1>
-            <p style={{ color: 'var(--muted)', fontSize: '15px' }}>
-              Nhập email và mật khẩu để truy cập tài khoản của bạn
-            </p>
-          </div>
-
-          {/* Form */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '32px' }}>
+          <div style={{ 
+            display: 'flex', 
+            width: '200%', 
+            transform: `translateX(${step === 1 ? '0%' : '-50%'})`, 
+            transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)' 
+          }}>
             
-            <div>
-              <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>Email</label>
+            {/* --- STEP 1: EMAIL --- */}
+            <form onSubmit={handleNext} style={{ width: '50%', padding: '40px', flexShrink: 0, boxSizing: 'border-box' }}>
+              <h2 style={{ fontSize: '32px', fontWeight: 800, marginBottom: '8px', letterSpacing: '-0.5px' }}>Chào mừng</h2>
+              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', marginBottom: '32px' }}>Vui lòng nhập email để tiếp tục</p>
+              
               <input 
+                ref={emailInputRef}
                 type="email" 
-                placeholder="Nhập email của bạn" 
+                placeholder="name@example.com" 
+                value={email}
+                onChange={e => setEmail(e.target.value)}
                 style={{ 
                   width: '100%', 
-                  fontSize: '15px', 
-                  padding: '14px 16px', 
-                  borderRadius: '8px', 
-                  border: '1px solid var(--border)', 
-                  backgroundColor: 'var(--soft-bg)', 
-                  color: 'var(--text)',
+                  fontSize: '18px', 
+                  padding: '16px 20px', 
+                  borderRadius: '12px', 
+                  border: '1px solid rgba(255,255,255,0.2)', 
+                  backgroundColor: 'rgba(0,0,0,0.2)', 
+                  color: 'white',
                   outline: 'none',
-                  transition: 'border-color 0.2s'
+                  transition: 'all 0.2s',
+                  boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)'
                 }}
-                onFocus={e => e.currentTarget.style.borderColor = 'var(--blue)'}
-                onBlur={e => e.currentTarget.style.borderColor = 'var(--border)'}
+                onFocus={e => { e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.4)'; }}
+                onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.2)'; }}
+                required
               />
-            </div>
+              
+              <button 
+                type="submit"
+                disabled={email.trim().length === 0}
+                style={{ 
+                  width: '100%', 
+                  padding: '16px', 
+                  fontSize: '16px', 
+                  fontWeight: 600, 
+                  color: '#ffffff', 
+                  backgroundColor: email.trim().length === 0 ? 'rgba(255,255,255,0.1)' : '#0d5cff', 
+                  borderRadius: '12px',
+                  border: 'none',
+                  cursor: email.trim().length === 0 ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.3s',
+                  marginTop: '24px',
+                  boxShadow: email.trim().length === 0 ? 'none' : '0 8px 16px rgba(13, 92, 255, 0.4)'
+                }} 
+              >
+                Tiếp tục
+              </button>
+            </form>
 
-            <div>
-              <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: 'var(--text)', marginBottom: '8px' }}>Mật khẩu</label>
+            {/* --- STEP 2: PASSWORD --- */}
+            <form onSubmit={handleLogin} style={{ width: '50%', padding: '40px', flexShrink: 0, boxSizing: 'border-box' }}>
+              <button 
+                type="button" 
+                onClick={() => setStep(1)}
+                style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer', marginBottom: '16px', fontSize: '14px', fontWeight: 500, padding: 0 }}
+                onMouseOver={e => e.currentTarget.style.color = 'white'}
+                onMouseOut={e => e.currentTarget.style.color = 'rgba(255,255,255,0.6)'}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Quay lại
+              </button>
+
+              <h2 style={{ fontSize: '32px', fontWeight: 800, marginBottom: '8px', letterSpacing: '-0.5px' }}>Mật khẩu</h2>
+              <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#0d5cff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 800, color: 'white' }}>
+                  {email.charAt(0).toUpperCase()}
+                </div>
+                <span style={{ fontWeight: 500, color: 'white', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '200px' }}>{email}</span>
+              </div>
+              
               <div style={{ position: 'relative' }}>
                 <input 
+                  ref={passwordInputRef}
                   type={showPassword ? 'text' : 'password'} 
                   placeholder="Nhập mật khẩu" 
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
                   style={{ 
                     width: '100%', 
-                    fontSize: '15px', 
-                    padding: '14px 16px', 
-                    paddingRight: '48px',
-                    borderRadius: '8px', 
-                    border: '1px solid var(--border)', 
-                    backgroundColor: 'var(--soft-bg)', 
-                    color: 'var(--text)',
+                    fontSize: '18px', 
+                    padding: '16px 20px', 
+                    paddingRight: '50px',
+                    borderRadius: '12px', 
+                    border: '1px solid rgba(255,255,255,0.2)', 
+                    backgroundColor: 'rgba(0,0,0,0.2)', 
+                    color: 'white',
                     outline: 'none',
-                    transition: 'border-color 0.2s'
-                  }} 
-                  onFocus={e => e.currentTarget.style.borderColor = 'var(--blue)'}
-                  onBlur={e => e.currentTarget.style.borderColor = 'var(--border)'}
+                    transition: 'all 0.2s',
+                    boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)'
+                  }}
+                  onFocus={e => { e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.4)'; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.2)'; }}
+                  required
                 />
                 <button 
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   style={{
-                    position: 'absolute',
-                    right: '16px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: 'var(--muted)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer'
+                    position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)',
+                    color: 'rgba(255,255,255,0.5)', background: 'none', border: 'none', cursor: 'pointer', padding: '4px'
                   }}
+                  onMouseOver={e => e.currentTarget.style.color = 'white'}
+                  onMouseOut={e => e.currentTarget.style.color = 'rgba(255,255,255,0.5)'}
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -272,75 +253,66 @@ export const LoginPage: React.FC = () => {
                   </svg>
                 </button>
               </div>
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '13px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: 'var(--text)', fontWeight: 500 }}>
-                <input type="checkbox" style={{ width: '16px', height: '16px', accentColor: 'var(--blue)', borderRadius: '4px', border: '1px solid var(--border)' }} />
-                Ghi nhớ đăng nhập
-              </label>
-              <button style={{ color: 'var(--blue)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}>
-                Quên mật khẩu?
-              </button>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '12px' }}>
-              <button style={{ 
-                width: '100%', 
-                padding: '14px', 
-                fontSize: '15px', 
-                fontWeight: 600, 
-                color: '#ffffff', 
-                backgroundColor: 'var(--blue)', 
-                borderRadius: '8px',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                boxShadow: '0 4px 12px rgba(13, 92, 255, 0.3)'
-              }} onMouseOver={e => {e.currentTarget.style.opacity = '0.9'; e.currentTarget.style.transform = 'translateY(-1px)'}} onMouseOut={e => {e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'}}>
+              
+              <button 
+                type="submit"
+                style={{ 
+                  width: '100%', 
+                  padding: '16px', 
+                  fontSize: '16px', 
+                  fontWeight: 600, 
+                  color: '#ffffff', 
+                  backgroundColor: '#0d5cff', 
+                  borderRadius: '12px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  marginTop: '24px',
+                  boxShadow: '0 8px 16px rgba(13, 92, 255, 0.4)'
+                }} 
+                onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 24px rgba(13, 92, 255, 0.5)'; }}
+                onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 16px rgba(13, 92, 255, 0.4)'; }}
+              >
                 Đăng nhập
               </button>
-            </div>
-          </div>
+            </form>
 
-          {/* Footer */}
-          <div style={{ textAlign: 'center', fontSize: '14px', color: 'var(--muted)' }}>
-            Chưa có tài khoản? <button style={{ color: 'var(--text)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer' }}>Đăng ký</button>
           </div>
         </div>
 
-        {/* Demo Roles - Pushed to the bottom */}
-        <div style={{ width: '100%', marginTop: '64px', borderTop: '1px solid var(--border)', paddingTop: '32px' }}>
-          <div style={{ textAlign: 'center', fontSize: '12px', color: 'var(--muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>
-            Đăng nhập nhanh (Bản Demo)
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <button onClick={() => handleMockLogin('PLAYER')} style={{ 
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', padding: '10px', borderRadius: '8px', 
-              backgroundColor: 'var(--surface)', border: '1px dashed var(--border)', transition: 'all 0.2s',
-              color: 'var(--muted)', fontWeight: 500, fontSize: '13px', cursor: 'pointer'
-            }} onMouseOver={(e) => {e.currentTarget.style.backgroundColor = 'var(--soft-bg)'; e.currentTarget.style.color = 'var(--text)';}} onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'var(--surface)'; e.currentTarget.style.color = 'var(--muted)';}}>
-              Vai trò: Người chơi
+        {/* Demo Roles Panel (Discreet & Elegant) */}
+        <div style={{ 
+          marginTop: '40px', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center',
+          animation: 'slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both'
+        }}>
+          <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.4)', fontWeight: 600, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '16px' }}>
+            Trải nghiệm nhanh
+          </p>
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <button onClick={() => handleMockLogin('PLAYER')} style={{
+              padding: '8px 16px', borderRadius: '99px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+              color: 'rgba(255,255,255,0.8)', fontSize: '13px', fontWeight: 500, cursor: 'pointer', backdropFilter: 'blur(8px)', transition: 'all 0.2s'
+            }} onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.color = 'white'; }} onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = 'rgba(255,255,255,0.8)'; }}>
+              Player
             </button>
-            
-            <button onClick={() => handleMockLogin('HOST')} style={{ 
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', padding: '10px', borderRadius: '8px', 
-              backgroundColor: 'var(--surface)', border: '1px dashed var(--border)', transition: 'all 0.2s',
-              color: 'var(--muted)', fontWeight: 500, fontSize: '13px', cursor: 'pointer'
-            }} onMouseOver={(e) => {e.currentTarget.style.backgroundColor = 'var(--soft-bg)'; e.currentTarget.style.color = 'var(--text)';}} onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'var(--surface)'; e.currentTarget.style.color = 'var(--muted)';}}>
-              Vai trò: Host
+            <button onClick={() => handleMockLogin('HOST')} style={{
+              padding: '8px 16px', borderRadius: '99px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+              color: 'rgba(255,255,255,0.8)', fontSize: '13px', fontWeight: 500, cursor: 'pointer', backdropFilter: 'blur(8px)', transition: 'all 0.2s'
+            }} onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.color = 'white'; }} onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = 'rgba(255,255,255,0.8)'; }}>
+              Host
             </button>
-
-            <button onClick={() => handleMockLogin('ADMIN')} style={{ 
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%', padding: '10px', borderRadius: '8px', 
-              backgroundColor: 'var(--surface)', border: '1px dashed var(--border)', transition: 'all 0.2s',
-              color: 'var(--muted)', fontWeight: 500, fontSize: '13px', cursor: 'pointer'
-            }} onMouseOver={(e) => {e.currentTarget.style.backgroundColor = 'var(--soft-bg)'; e.currentTarget.style.color = 'var(--text)';}} onMouseOut={(e) => {e.currentTarget.style.backgroundColor = 'var(--surface)'; e.currentTarget.style.color = 'var(--muted)';}}>
-              Vai trò: Admin
+            <button onClick={() => handleMockLogin('ADMIN')} style={{
+              padding: '8px 16px', borderRadius: '99px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+              color: 'rgba(255,255,255,0.8)', fontSize: '13px', fontWeight: 500, cursor: 'pointer', backdropFilter: 'blur(8px)', transition: 'all 0.2s'
+            }} onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.color = 'white'; }} onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = 'rgba(255,255,255,0.8)'; }}>
+              Admin
             </button>
           </div>
         </div>
-        
+
       </div>
     </div>
   );
