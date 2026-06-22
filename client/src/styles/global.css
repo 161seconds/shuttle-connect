@@ -30,10 +30,10 @@
   --navy: #f8fafc;
   --text: #f1f5f9;
   --muted: #94a3b8;
-  --surface: #1e293b;
-  --bg: #0f172a;
-  --border: #334155;
-  --soft-bg: #0f172a;
+  --surface: #111827; /* Sâu hơn */
+  --bg: #090e17; /* Sâu hơn */
+  --border: #1f2937;
+  --soft-bg: #1f2937;
   --orange: #f97316;
   --purple: #8b5cf6;
   
@@ -41,9 +41,9 @@
   --warning: #f97316;
   --danger: #f87171;
   
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.6);
 }
 
 * {
@@ -217,10 +217,20 @@ input[type="date"]::-webkit-datetime-edit {
   box-shadow: 0 12px 24px -8px rgba(13, 92, 255, 0.25), 0 4px 8px rgba(13, 92, 255, 0.1);
   border-color: rgba(13, 92, 255, 0.4);
 }
+.hover-tilt {
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+.hover-tilt:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) scale(1.02);
+  box-shadow: -8px 12px 24px rgba(0,0,0,0.1), 0 0 15px rgba(13, 92, 255, 0.15);
+  border-color: rgba(13, 92, 255, 0.3);
+  z-index: 10;
+}
 .hover-scale-icon {
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.hover-lift:hover .hover-scale-icon {
+.hover-lift:hover .hover-scale-icon,
+.hover-tilt:hover .hover-scale-icon {
   transform: scale(1.15) rotate(-5deg);
 }
 
@@ -354,5 +364,24 @@ input[type="date"]::-webkit-datetime-edit {
 ::view-transition-new(game-card-morph) {
   animation-duration: 0.5s;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Skeleton Loading */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--soft-bg) 25%, var(--border) 50%, var(--soft-bg) 75%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-text {
+  height: 14px;
+  margin-bottom: 8px;
+  border-radius: 4px;
 }
 
