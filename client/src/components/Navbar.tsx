@@ -44,13 +44,13 @@ export const Navbar: React.FC = () => {
 
         {/* Center Nav Links */}
         <div className="flex gap-8 hide-on-mobile" style={{ height: '100%', alignItems: 'center', fontSize: '15px', fontWeight: 600 }}>
-          <Link to="/" style={{ color: location.pathname === '/' ? 'var(--green)' : 'var(--muted)', borderBottom: location.pathname === '/' ? '2px solid var(--green)' : '2px solid transparent', display: 'flex', alignItems: 'center', height: '100%' }}>Trang chủ</Link>
-          <Link to="/explore" style={{ color: location.pathname === '/explore' ? 'var(--green)' : 'var(--muted)', display: 'flex', alignItems: 'center', height: '100%', borderBottom: location.pathname === '/explore' ? '2px solid var(--green)' : '2px solid transparent' }}>Khám phá</Link>
-          <Link to="/host" style={{ color: location.pathname === '/host' ? 'var(--green)' : 'var(--muted)', display: 'flex', alignItems: 'center', height: '100%', borderBottom: location.pathname === '/host' ? '2px solid var(--green)' : '2px solid transparent' }}>Đăng kèo</Link>
-          {(role === 'ADMIN') && (
-            <Link to="/admin" style={{ color: location.pathname === '/admin' ? 'var(--green)' : 'var(--muted)', display: 'flex', alignItems: 'center', height: '100%', borderBottom: location.pathname === '/admin' ? '2px solid var(--green)' : '2px solid transparent' }}>Admin</Link>
+          <Link to="/" style={{ color: location.pathname === '/' ? 'var(--blue)' : 'var(--muted)', borderBottom: location.pathname === '/' ? '2px solid var(--blue)' : '2px solid transparent', display: 'flex', alignItems: 'center', height: '100%' }}>Trang chủ</Link>
+          <Link to="/explore" style={{ color: location.pathname === '/explore' ? 'var(--blue)' : 'var(--muted)', display: 'flex', alignItems: 'center', height: '100%', borderBottom: location.pathname === '/explore' ? '2px solid var(--blue)' : '2px solid transparent' }}>Khám phá</Link>
+          <Link to="/host" style={{ color: location.pathname === '/host' ? 'var(--blue)' : 'var(--muted)', display: 'flex', alignItems: 'center', height: '100%', borderBottom: location.pathname === '/host' ? '2px solid var(--blue)' : '2px solid transparent' }}>Đăng kèo</Link>
+          {(role === 'ADMIN') && (  
+            <Link to="/admin" style={{ color: location.pathname === '/admin' ? 'var(--blue)' : 'var(--muted)', display: 'flex', alignItems: 'center', height: '100%', borderBottom: location.pathname === '/admin' ? '2px solid var(--blue)' : '2px solid transparent' }}>Admin</Link>
           )}
-          <Link to="/about" style={{ color: location.pathname === '/about' ? 'var(--green)' : 'var(--muted)', display: 'flex', alignItems: 'center', height: '100%', borderBottom: location.pathname === '/about' ? '2px solid var(--green)' : '2px solid transparent' }}>Giới thiệu</Link>
+          <Link to="/about" style={{ color: location.pathname === '/about' ? 'var(--blue)' : 'var(--muted)', display: 'flex', alignItems: 'center', height: '100%', borderBottom: location.pathname === '/about' ? '2px solid var(--blue)' : '2px solid transparent' }}>Giới thiệu</Link>
         </div>
 
         {/* Right side */}

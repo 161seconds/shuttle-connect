@@ -5,6 +5,7 @@ import { GameList } from '../components/GameList';
 import { MockMap } from '../components/MockMap';
 import { SkeletonGameCard } from '../components/SkeletonGameCard';
 import { api } from '../api';
+import { useAlert } from '../contexts/GlobalAlertContext';
 
 export const ExplorePage: React.FC = () => {
   const [filters, setFilters] = useState<ISearchFilters>({});
@@ -12,6 +13,7 @@ export const ExplorePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [hoveredGameId, setHoveredGameId] = useState<string | null>(null);
   const [selectedGame, setSelectedGame] = useState<GamePost | null>(null);
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -143,7 +145,9 @@ export const ExplorePage: React.FC = () => {
                 <span style={{ fontWeight: 600, color: 'var(--muted)', fontSize: '18px' }}>{selectedGame.startTime} - {selectedGame.endTime}</span>
               </div>
               <div style={{ display: 'flex', gap: '16px' }}>
-                <button style={{ flex: 1, padding: '16px', backgroundColor: 'var(--blue)', color: '#ffffff', fontSize: '18px', fontWeight: 800, border: 'none', borderRadius: '12px', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseOver={e => e.currentTarget.style.backgroundColor = 'var(--blue-dark)'} onMouseOut={e => e.currentTarget.style.backgroundColor = 'var(--blue)'} onClick={() => alert('Booked!')}>Đặt chỗ ngay</button>
+                <button style={{ flex: 1, padding: '16px', backgroundColor: 'var(--blue)', color: '#ffffff', fontSize: '18px', fontWeight: 800, border: 'none', borderRadius: '12px', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseOver={e => e.currentTarget.style.backgroundColor = 'var(--blue-dark)'} onMouseOut={e => e.currentTarget.style.backgroundColor = 'var(--blue)'} onClick={() => {
+                  showAlert('Đặt chỗ thành công! Host sẽ sớm liên hệ với bạn.', 'success');
+                }}>Đặt chỗ ngay</button>
                 <button style={{ padding: '16px 32px', backgroundColor: 'transparent', color: 'var(--text)', fontSize: '18px', fontWeight: 700, border: '2px solid var(--border)', borderRadius: '12px', cursor: 'pointer', transition: 'all 0.2s' }} onMouseOver={e => { e.currentTarget.style.backgroundColor = 'var(--soft-bg)'; }} onMouseOut={e => { e.currentTarget.style.backgroundColor = 'transparent'; }} onClick={closeGameModal}>Đóng</button>
               </div>
             </div>

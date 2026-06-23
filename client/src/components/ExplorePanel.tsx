@@ -1,6 +1,7 @@
 import React from 'react';
 import { SearchIcon } from './icons';
 import { MockMap } from './MockMap';
+import { CustomSelect } from './CustomSelect';
 import type { GamePost } from '../types';
 
 interface ExplorePanelProps {
@@ -34,10 +35,10 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({ games = [] }) => {
           <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)', display: 'flex' }}><SearchIcon size={16} /></span>
           <input type="text" placeholder="Tìm sân..." style={{ width: '100%', paddingLeft: '36px', fontSize: '13px' }} />
         </div>
-        <select style={{ flex: '1 1 100px', fontSize: '13px' }}><option>Quận/huyện</option></select>
-        <input type="date" value="2025-05-23" style={{ flex: '1 1 110px', fontSize: '13px' }} onChange={()=>{}}/>
-        <select style={{ flex: '1 1 100px', fontSize: '13px' }}><option>Thời gian</option></select>
-        <select style={{ flex: '1 1 90px', fontSize: '13px' }}><option>Trình độ</option></select>
+        <CustomSelect size="small" style={{ flex: '1 1 100px' }} value="" onChange={()=>{}} options={[]} placeholder="Quận/huyện" />
+        <input type="date" value="2025-05-23" style={{ flex: '1 1 110px', fontSize: '13px', padding: '8px 12px', borderRadius: '12px', border: '1px solid var(--border)' }} onChange={()=>{}}/>
+        <CustomSelect size="small" style={{ flex: '1 1 100px' }} value="" onChange={()=>{}} options={[]} placeholder="Thời gian" />
+        <CustomSelect size="small" style={{ flex: '1 1 90px' }} value="" onChange={()=>{}} options={[]} placeholder="Trình độ" />
         <button className="btn btn-primary" style={{ padding: '6px 12px', borderRadius: '8px', fontSize: '13px', flexShrink: 0 }}>
           Lọc
         </button>

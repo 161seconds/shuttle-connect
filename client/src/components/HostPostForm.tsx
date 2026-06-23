@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { api } from '../api';
+import { CustomSelect } from './CustomSelect';
+import { useAlert } from '../contexts/GlobalAlertContext';
 
 interface HostPostFormProps {
   onSuccess?: () => void;
@@ -20,6 +22,7 @@ export const HostPostForm: React.FC<HostPostFormProps> = ({ onSuccess }) => {
     description: ''
   });
   const [loading, setLoading] = useState(false);
+  const { showAlert } = useAlert();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -40,7 +43,7 @@ export const HostPostForm: React.FC<HostPostFormProps> = ({ onSuccess }) => {
         slotsNeeded: Number(formData.slotsNeeded),
         price: Number(formData.price)
       });
-      alert('Tạo kèo thành công!');
+      showAlert('Tạo kèo thành công!', 'success');
       // Reset form
       setFormData({
         courtName: '', district: 'Quận 1', address: '', playDate: '', startTime: '', endTime: '',
@@ -49,7 +52,7 @@ export const HostPostForm: React.FC<HostPostFormProps> = ({ onSuccess }) => {
       if (onSuccess) onSuccess();
     } catch (error) {
       console.error(error);
-      alert('Có lỗi xảy ra khi tạo kèo');
+      showAlert('Có lỗi xảy ra khi tạo kèo', 'error');
     } finally {
       setLoading(false);
     }
@@ -66,17 +69,22 @@ export const HostPostForm: React.FC<HostPostFormProps> = ({ onSuccess }) => {
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm font-bold">District</label>
-            <select name="district" value={formData.district} onChange={handleChange}>
-              <option value="Quận 1">Quận 1</option>
-              <option value="Quận 2">Quận 2</option>
-              <option value="Quận 3">Quận 3</option>
-              <option value="Quận 4">Quận 4</option>
-              <option value="Quận 5">Quận 5</option>
-              <option value="Quận 10">Quận 10</option>
-              <option value="Quận 11">Quận 11</option>
-              <option value="Tân Bình">Tân Bình</option>
-              <option value="Bình Thạnh">Bình Thạnh</option>
-            </select>
+            <CustomSelect 
+              options={[
+                { value: 'Quận 1', label: 'Quận 1' },
+                { value: 'Quận 2', label: 'Quận 2' },
+                { value: 'Quận 3', label: 'Quận 3' },
+                { value: 'Quận 4', label: 'Quận 4' },
+                { value: 'Quận 5', label: 'Quận 5' },
+                { value: 'Quận 10', label: 'Quận 10' },
+                { value: 'Quận 11', label: 'Quận 11' },
+                { value: 'Tân Bình', label: 'Tân Bình' },
+                { value: 'Bình Thạnh', label: 'Bình Thạnh' },
+              ]}
+              value={formData.district}
+              onChange={(val) => setFormData(prev => ({ ...prev, district: val }))}
+              placeholder="Chọn Quận/Huyện"
+            />
           </div>
         </div>
 
@@ -103,13 +111,18 @@ export const HostPostForm: React.FC<HostPostFormProps> = ({ onSuccess }) => {
         <div className="grid grid-cols-3 gap-4">
           <div className="flex flex-col gap-1">
             <label className="text-sm font-bold">Skill Level</label>
-            <select name="skillLevel" value={formData.skillLevel} onChange={handleChange}>
-              <option value="Yếu">Yếu</option>
-              <option value="Trung bình">Trung bình</option>
-              <option value="Trung bình khá">Trung bình khá</option>
-              <option value="Khá">Khá</option>
-              <option value="Cứng">Cứng</option>
-            </select>
+            <CustomSelect 
+              options={[
+                { value: 'Yếu', label: 'Yếu' },
+                { value: 'Trung bình', label: 'Trung bình' },
+                { value: 'Trung bình khá', label: 'Trung bình khá' },
+                { value: 'Khá', label: 'Khá' },
+                { value: 'Cứng', label: 'Cứng' },
+              ]}
+              value={formData.skillLevel}
+              onChange={(val) => setFormData(prev => ({ ...prev, skillLevel: val }))}
+              placeholder="Trình độ"
+            />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm font-bold">Slots Needed</label>

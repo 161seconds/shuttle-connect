@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CalendarIcon, FacebookIcon, MapPinIcon, ClockIcon, StarIcon, PhoneIcon } from './icons';
+import { CustomSelect } from './CustomSelect';
 
 export const PostFormPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'MANUAL' | 'FB'>('MANUAL');
@@ -65,7 +66,7 @@ export const PostFormPanel: React.FC = () => {
                 </div>
                 <div style={{ flex: 1 }}>
                   <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>Quận/Huyện</label>
-                  <select style={{ width: '100%', fontSize: '14px' }}><option>Chọn quận/huyện</option></select>
+                  <CustomSelect value="" onChange={()=>{}} options={[]} placeholder="Chọn quận/huyện" />
                 </div>
               </div>
               
@@ -88,7 +89,7 @@ export const PostFormPanel: React.FC = () => {
               <div style={{ display: 'flex', gap: '16px' }}>
                 <div style={{ flex: 1 }}>
                   <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>Trình độ</label>
-                  <select style={{ width: '100%', fontSize: '14px' }}><option>Chọn trình độ</option></select>
+                  <CustomSelect value="" onChange={()=>{}} options={[]} placeholder="Chọn trình độ" />
                 </div>
                 <div style={{ flex: 1 }}>
                   <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>Cần tuyển (người)</label>
