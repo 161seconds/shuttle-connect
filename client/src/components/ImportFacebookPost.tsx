@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { api } from '../api';
 import type { ParsedFacebookPost } from '../types';
+import { useAlert } from '../contexts/GlobalAlertContext';
 
 interface ImportFacebookPostProps {
   onSuccess?: () => void;
@@ -10,6 +11,7 @@ export const ImportFacebookPost: React.FC<ImportFacebookPostProps> = ({ onSucces
   const [text, setText] = useState('');
   const [parsedData, setParsedData] = useState<ParsedFacebookPost | null>(null);
   const [loading, setLoading] = useState(false);
+  const { showAlert } = useAlert();
 
   const handleParse = async () => {
     if (!text) return;
@@ -19,7 +21,7 @@ export const ImportFacebookPost: React.FC<ImportFacebookPostProps> = ({ onSucces
       setParsedData(data);
     } catch (error) {
       console.error('Parse error:', error);
-      alert('Failed to parse text from server.');
+      showAlert('Failed to parse text from server.', 'error');
     } finally {
       setLoading(false);
     }
@@ -38,7 +40,7 @@ export const ImportFacebookPost: React.FC<ImportFacebookPostProps> = ({ onSucces
         endTime: parsedData.endTime || '20:00',
         skillLevel: parsedData.skillLevel || 'Trung bình',
         slotsNeeded: parsedData.slotsNeeded || 1,
-        price: parsedData.price || 50000,
+        price: Number(parsedData.price || 0),
         contactInfo: parsedData.contactInfo || 'Unknown Contact',
         description: text,
         hostName: 'Current Host',
@@ -47,13 +49,13 @@ export const ImportFacebookPost: React.FC<ImportFacebookPostProps> = ({ onSucces
         slotsText: `Cần thêm ${parsedData.slotsNeeded || 1} slot`,
         dateLabel: 'Imported Date'
       });
-      alert('Tạo nháp thành công! Vui lòng chờ Admin duyệt.');
+      showAlert('Tạo nháp thành công! Vui lòng chờ Admin duyệt.', 'success');
       setText('');
       setParsedData(null);
       if (onSuccess) onSuccess();
     } catch (error) {
       console.error('Create error:', error);
-      alert('Lỗi tạo kèo nháp.');
+      showAlert('Lỗi tạo kèo nháp.', 'error');
     } finally {
       setLoading(false);
     }

@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { GameCard } from '../components/GameCard';
 import { api } from '../api';
 import type { GamePost, PostStatus } from '../types';
+import { useAlert } from '../contexts/GlobalAlertContext';
 
 export const AdminReviewPage: React.FC = () => {
   const [pendingPosts, setPendingPosts] = useState<GamePost[]>([]);
   const [loading, setLoading] = useState(true);
+  const { showAlert } = useAlert();
 
   const fetchPendingPosts = async () => {
     setLoading(true);
@@ -31,7 +33,7 @@ export const AdminReviewPage: React.FC = () => {
       fetchPendingPosts();
     } catch (error) {
       console.error('Error updating status:', error);
-      alert('Failed to update status');
+      showAlert('Failed to update status', 'error');
     }
   };
 

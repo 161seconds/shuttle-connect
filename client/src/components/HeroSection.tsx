@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SearchIcon, BadmintonIcon } from './icons';
+import { CustomSelect } from './CustomSelect';
 
 export const HeroSection: React.FC = () => {
   const navigate = useNavigate();
+  const [district, setDistrict] = useState('');
 
   return (
     <div className="hero-container" style={{
@@ -101,25 +103,20 @@ export const HeroSection: React.FC = () => {
           border: '1px solid var(--border)',
           boxShadow: 'var(--shadow-lg)',
         }}>
-          <select style={{ 
-            flex: 1, 
-            backgroundColor: 'var(--surface)', 
-            color: 'var(--text)', 
-            border: '2px solid transparent', 
-            borderRadius: '12px', 
-            padding: '16px 36px 16px 16px', 
-            fontSize: '16px', 
-            fontWeight: 600, 
-            outline: 'none',
-            cursor: 'pointer'
-          }} onFocus={e => e.currentTarget.style.borderColor = 'var(--blue)'} onBlur={e => e.currentTarget.style.borderColor = 'transparent'}>
-            <option>Chọn Quận/Huyện</option>
-            <option>Quận 1</option>
-            <option>Quận 2</option>
-            <option>Quận 3</option>
-            <option>Quận 7</option>
-            <option>Bình Thạnh</option>
-          </select>
+          <CustomSelect 
+            options={[
+              { value: 'Quận 1', label: 'Quận 1' },
+              { value: 'Quận 2', label: 'Quận 2' },
+              { value: 'Quận 3', label: 'Quận 3' },
+              { value: 'Quận 7', label: 'Quận 7' },
+              { value: 'Bình Thạnh', label: 'Bình Thạnh' },
+            ]}
+            value={district}
+            onChange={setDistrict}
+            placeholder="Chọn Quận/Huyện"
+            style={{ flex: 1 }}
+            size="large"
+          />
           <input type="date" style={{ 
             flex: 1, 
             backgroundColor: 'var(--surface)', 
