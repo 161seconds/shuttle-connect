@@ -23,7 +23,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onFilterC
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
       <div style={{ flex: '1 1 120px' }}>
-        <select name="district" value={filters.district || ''} onChange={handleChange} style={{ width: '100%', padding: '8px 12px', fontSize: '13px' }}>
+        <select name="district" value={filters.district || ''} onChange={handleChange} style={{ width: '100%', padding: '8px 36px 8px 12px', fontSize: '13px' }}>
           <option value="">Quận/huyện</option>
           <option value="District 1">Quận 1</option>
           <option value="District 11">Quận 11</option>
@@ -36,7 +36,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onFilterC
       </div>
 
       <div style={{ flex: '1 1 120px' }}>
-        <select name="skillLevel" value={filters.skillLevel || ''} onChange={handleChange} style={{ width: '100%', padding: '8px 12px', fontSize: '13px' }}>
+        <select name="skillLevel" value={filters.skillLevel || ''} onChange={handleChange} style={{ width: '100%', padding: '8px 36px 8px 12px', fontSize: '13px' }}>
           <option value="">Trình độ</option>
           <option value="yếu">Yếu</option>
           <option value="trung bình">Trung bình</option>
