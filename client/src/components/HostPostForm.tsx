@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { api } from '../api';
 import { CustomSelect } from './CustomSelect';
+import { DateSelect } from './DateSelect';
 import { useAlert } from '../contexts/GlobalAlertContext';
 
 interface HostPostFormProps {
@@ -96,7 +97,7 @@ export const HostPostForm: React.FC<HostPostFormProps> = ({ onSuccess }) => {
         <div className="grid grid-cols-3 gap-4">
           <div className="flex flex-col gap-1">
             <label className="text-sm font-bold">Date</label>
-            <input type="date" name="playDate" value={formData.playDate} onChange={handleChange} required />
+            <DateSelect value={formData.playDate} onChange={(val) => setFormData(prev => ({ ...prev, playDate: val }))} placeholder="Chọn ngày" />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm font-bold">Start Time</label>

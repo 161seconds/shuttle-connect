@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SearchIcon, BadmintonIcon } from './icons';
 import { CustomSelect } from './CustomSelect';
+import { DateSelect } from './DateSelect';
 
 export const HeroSection: React.FC = () => {
   const navigate = useNavigate();
   const [district, setDistrict] = useState('');
+  const [date, setDate] = useState('');
 
   return (
     <div className="hero-container" style={{
@@ -117,18 +119,14 @@ export const HeroSection: React.FC = () => {
             style={{ flex: 1 }}
             size="large"
           />
-          <input type="date" style={{ 
-            flex: 1, 
-            backgroundColor: 'var(--surface)', 
-            color: 'var(--text)', 
-            border: '2px solid transparent', 
-            borderRadius: '12px', 
-            padding: '16px 36px 16px 16px', 
-            fontSize: '16px', 
-            fontWeight: 600, 
-            outline: 'none',
-            fontFamily: 'inherit'
-          }} onFocus={e => e.currentTarget.style.borderColor = 'var(--blue)'} onBlur={e => e.currentTarget.style.borderColor = 'transparent'} />
+          <DateSelect 
+            value={date}
+            onChange={setDate}
+            placeholder="Chọn ngày"
+            style={{ flex: 1 }}
+            size="large"
+            includeAllOption={true}
+          />
           <button onClick={() => navigate('/explore')} style={{ 
             padding: '16px 32px', 
             borderRadius: '12px', 

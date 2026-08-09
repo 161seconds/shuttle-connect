@@ -2,6 +2,7 @@ import React from 'react';
 import { SearchIcon } from './icons';
 import { MockMap } from './MockMap';
 import { CustomSelect } from './CustomSelect';
+import { DateSelect } from './DateSelect';
 import type { GamePost } from '../types';
 
 interface ExplorePanelProps {
@@ -36,7 +37,7 @@ export const ExplorePanel: React.FC<ExplorePanelProps> = ({ games = [] }) => {
           <input type="text" placeholder="Tìm sân..." style={{ width: '100%', paddingLeft: '36px', fontSize: '13px' }} />
         </div>
         <CustomSelect size="small" style={{ flex: '1 1 100px' }} value="" onChange={()=>{}} options={[]} placeholder="Quận/huyện" />
-        <input type="date" value="2025-05-23" style={{ flex: '1 1 110px', fontSize: '13px', padding: '8px 12px', borderRadius: '12px', border: '1px solid var(--border)' }} onChange={()=>{}}/>
+        <DateSelect size="small" style={{ flex: '1 1 110px' }} value="" onChange={()=>{}} placeholder="Chọn ngày" includeAllOption={true} />
         <CustomSelect size="small" style={{ flex: '1 1 100px' }} value="" onChange={()=>{}} options={[]} placeholder="Thời gian" />
         <CustomSelect size="small" style={{ flex: '1 1 90px' }} value="" onChange={()=>{}} options={[]} placeholder="Trình độ" />
         <button className="btn btn-primary" style={{ padding: '6px 12px', borderRadius: '8px', fontSize: '13px', flexShrink: 0 }}>

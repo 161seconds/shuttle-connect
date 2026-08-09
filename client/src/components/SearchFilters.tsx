@@ -1,6 +1,7 @@
 import React from 'react';
 import type { SearchFilters as ISearchFilters } from '../types';
 import { CustomSelect } from './CustomSelect';
+import { DateSelect } from './DateSelect';
 
 interface SearchFiltersProps {
   filters: ISearchFilters;
@@ -42,7 +43,12 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onFilterC
       </div>
 
       <div style={{ flex: '1 1 160px' }}>
-        <input type="date" name="date" value={filters.date || ''} onChange={handleChange} style={{ width: '100%', padding: '10px 16px', fontSize: '14px', borderRadius: '12px' }} />
+        <DateSelect 
+          value={filters.date || ''}
+          onChange={(val) => handleCustomChange('date', val)}
+          placeholder="Chọn ngày"
+          includeAllOption={true}
+        />
       </div>
 
       <div style={{ flex: '1 1 140px' }}>

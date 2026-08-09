@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CalendarIcon, FacebookIcon, MapPinIcon, ClockIcon, StarIcon, PhoneIcon } from './icons';
 import { CustomSelect } from './CustomSelect';
+import { DateSelect } from './DateSelect';
 
 export const PostFormPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'MANUAL' | 'FB'>('MANUAL');
@@ -78,7 +79,7 @@ export const PostFormPanel: React.FC = () => {
               <div style={{ display: 'flex', gap: '16px' }}>
                 <div style={{ flex: 1 }}>
                   <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>Ngày bắt đầu</label>
-                  <input type="date" value="2025-05-23" style={{ width: '100%', fontSize: '14px' }} onChange={()=>{}}/>
+                  <DateSelect value="" onChange={()=>{}} placeholder="Chọn ngày" />
                 </div>
                 <div style={{ flex: 1 }}>
                   <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>Giờ bắt đầu</label>
