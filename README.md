@@ -44,4 +44,5 @@ Example content:
 `VITE_VIETMAP_API_KEY=your_vietmap_api_key_here`
 
 ## MVP Limitations & Policy
-**Important Policy:** This MVP does not scrape Facebook groups to comply with legal policies and avoid hidden bots/cookies. It only supports manual Facebook post text import (copy-pasting text). Future integration will rely strictly on the official Facebook Page API.
+This MVP does not scrape Facebook groups. It supports manual Facebook post import and future official Facebook Page API integration.
+

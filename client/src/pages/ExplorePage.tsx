@@ -6,6 +6,7 @@ import { MockMap } from '../components/MockMap';
 import { SkeletonGameCard } from '../components/SkeletonGameCard';
 import { api } from '../api';
 import { useAlert } from '../contexts/GlobalAlertContext';
+import { BadmintonIcon, PhoneIcon } from '../components/icons';
 
 export const ExplorePage: React.FC = () => {
   const [filters, setFilters] = useState<ISearchFilters>({});
@@ -31,124 +32,314 @@ export const ExplorePage: React.FC = () => {
   }, [filters]);
 
   const handleGameClick = (game: GamePost) => {
-    if (!document.startViewTransition) {
-      setSelectedGame(game);
-      return;
-    }
-    document.startViewTransition(() => {
-      setSelectedGame(game);
-    });
+    setSelectedGame(game);
   };
 
   const closeGameModal = () => {
-    if (!document.startViewTransition) {
-      setSelectedGame(null);
-      return;
-    }
-    document.startViewTransition(() => {
-      setSelectedGame(null);
-    });
+    setSelectedGame(null);
+  };
+
+  const handleCopyPhone = (phone: string) => {
+    navigator.clipboard.writeText(phone);
+    showAlert(`Đã sao chép số điện thoại ${phone} vào bộ nhớ tạm!`, 'success');
   };
 
   return (
-    <div className="explore-container" style={{ display: 'flex', height: 'calc(100vh - 70px)', overflow: 'hidden', fontFamily: '"Be Vietnam Pro", -apple-system, sans-serif' }}>
+    <div className="explore-container" style={{ display: 'flex', height: 'calc(100vh - 70px)', overflow: 'hidden' }}>
       <style>{`
         @media (max-width: 1024px) {
           .explore-container {
             flex-direction: column-reverse !important;
+            height: auto !important;
+            overflow: visible !important;
           }
           .explore-left {
             width: 100% !important;
             max-width: none !important;
             min-width: 0 !important;
-            height: 60% !important;
+            height: auto !important;
           }
-          .explore-header {
-            padding: 24px !important;
-          }
-          .explore-title {
-            font-size: 32px !important;
+          .explore-right {
+            height: 480px !important;
           }
         }
       `}</style>
       
       {/* Left Column: Filters and List (Scrollable) */}
       <div className="explore-left" style={{ 
-        width: '45%', minWidth: '480px', maxWidth: '600px', 
+        width: '45%', minWidth: '480px', maxWidth: '620px', 
         height: '100%', overflowY: 'auto', 
         borderRight: '1px solid var(--border)',
-        backgroundColor: 'var(--surface)',
+        backgroundColor: 'var(--bg)',
         display: 'flex', flexDirection: 'column'
       }}>
-        {/* Filters Sticky Header - Bold Navy */}
-        <div className="explore-header" style={{ 
-          padding: '40px 32px', 
+        {/* Filters Sticky Header */}
+        <div style={{ 
+          padding: '24px 20px', 
           position: 'sticky', top: 0, zIndex: 10, 
-          backgroundColor: 'var(--surface)', 
-          color: 'var(--navy)',
+          backgroundColor: 'var(--glass-bg)',
+          backdropFilter: 'var(--glass-blur)',
+          WebkitBackdropFilter: 'var(--glass-blur)',
           borderBottom: '1px solid var(--border)',
           boxShadow: 'var(--shadow-sm)' 
         }}>
-          <h2 className="explore-title" style={{ fontSize: '40px', fontWeight: 900, marginBottom: '24px', letterSpacing: '-1px' }}>Khám phá kèo</h2>
-          <div style={{ backgroundColor: 'var(--bg)', borderRadius: '16px', padding: '16px', border: '1px solid var(--border)' }}>
-            <SearchFilters filters={filters} onFilterChange={setFilters} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+            <h2 style={{ fontSize: '24px', fontWeight: 900, letterSpacing: '-0.5px', margin: 0, color: 'var(--navy)' }}>
+              Khám phá kèo cầu lông
+            </h2>
+            <span style={{
+              fontSize: '12px',
+              fontWeight: 800,
+              padding: '4px 10px',
+              borderRadius: '9999px',
+              backgroundColor: 'var(--volt-bg)',
+              color: 'var(--volt)',
+              border: '1px solid rgba(16, 242, 132, 0.3)'
+            }}>
+              {posts.length} sân đang mở
+            </span>
           </div>
+
+          <SearchFilters filters={filters} onFilterChange={setFilters} />
         </div>
 
-        {/* Scrollable List */}
-        <div style={{ padding: '32px', flex: 1, backgroundColor: 'var(--bg)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-            <h3 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--navy)' }}>Kết quả tìm kiếm ({loading ? '...' : posts.length})</h3>
-          </div>
+        {/* Results List */}
+        <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px', flex: 1 }}>
           {loading ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <SkeletonGameCard />
               <SkeletonGameCard />
               <SkeletonGameCard />
             </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <GameList posts={posts} onHover={setHoveredGameId} onClick={handleGameClick} />
+          ) : posts.length === 0 ? (
+            <div style={{ 
+              textAlign: 'center', 
+              padding: '64px 24px', 
+              backgroundColor: 'var(--surface-card)', 
+              borderRadius: '24px',
+              border: '1px dashed var(--border)' 
+            }}>
+              <div style={{ fontSize: '48px', marginBottom: '16px' }}>🏸</div>
+              <h3 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--navy)', marginBottom: '8px' }}>
+                Không tìm thấy kèo phù hợp
+              </h3>
+              <p style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '20px' }}>
+                Thử nới lỏng bộ lọc Quận/Huyện, Trình độ hoặc Ngày chơi để xem thêm nhiều kèo hơn.
+              </p>
+              <button 
+                onClick={() => setFilters({})}
+                className="btn btn-primary"
+                style={{ padding: '10px 20px', fontSize: '13px' }}
+              >
+                Đặt lại toàn bộ bộ lọc
+              </button>
             </div>
+          ) : (
+            <GameList 
+              posts={posts} 
+              onHover={setHoveredGameId}
+              onClick={handleGameClick}
+            />
           )}
         </div>
       </div>
 
-      {/* Right Column: Sticky Map */}
-      <div style={{ flex: 1, height: '100%', position: 'relative' }}>
-        <MockMap games={posts} hoveredGameId={hoveredGameId} />
+      {/* Right Column: Interactive Vector Sports Map */}
+      <div className="explore-right" style={{ flex: 1, height: '100%', position: 'relative' }}>
+        <MockMap 
+          games={posts} 
+          hoveredGameId={hoveredGameId}
+          onSelectGame={handleGameClick}
+        />
       </div>
 
-      {/* View Transition Modal Overlay */}
+      {/* Modern Game Detail Modal */}
       {selectedGame && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 100,
-          backgroundColor: 'rgba(0, 0, 0, 0.7)', 
-          backdropFilter: 'blur(8px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center'
-        }} onClick={closeGameModal}>
-          <div style={{
-            backgroundColor: 'var(--surface)',
-            width: '100%', maxWidth: '560px',
-            borderRadius: '32px', overflow: 'hidden',
-            viewTransitionName: `game-card-morph-${selectedGame.id}`,
-            boxShadow: 'var(--shadow-lg)',
-            border: '1px solid var(--border)'
-          }} onClick={e => e.stopPropagation()}>
-            <div style={{ height: '240px', backgroundColor: 'var(--blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '32px', fontWeight: 900 }}>
-              Sân Cầu Lông
-            </div>
-            <div style={{ padding: '40px' }}>
-              <h2 style={{ fontSize: '32px', fontWeight: 900, marginBottom: '16px', letterSpacing: '-1px', color: 'var(--navy)' }}>{selectedGame.courtName}</h2>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '32px' }}>
-                <span style={{ padding: '8px 16px', backgroundColor: 'var(--soft-bg)', color: 'var(--blue)', borderRadius: '8px', fontWeight: 700 }}>{selectedGame.district}</span>
-                <span style={{ fontWeight: 600, color: 'var(--muted)', fontSize: '18px' }}>{selectedGame.startTime} - {selectedGame.endTime}</span>
+        <div 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(9, 13, 22, 0.75)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            animation: 'reveal-up 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+          }}
+          onClick={closeGameModal}
+        >
+          <div 
+            style={{
+              backgroundColor: 'var(--surface)',
+              borderRadius: '28px',
+              maxWidth: '580px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              border: '1px solid var(--border)',
+              boxShadow: 'var(--shadow-lg), var(--shadow-glow)',
+              position: 'relative'
+            }}
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Modal Top Banner */}
+            <div style={{
+              height: '140px',
+              background: 'linear-gradient(135deg, var(--blue) 0%, #1e40af 100%)',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'flex-end',
+              padding: '24px',
+              color: '#ffffff'
+            }}>
+              <div className="court-grid-pattern" style={{ position: 'absolute', inset: 0, opacity: 0.3 }} />
+              
+              <button 
+                onClick={closeGameModal}
+                style={{
+                  position: 'absolute',
+                  top: '16px',
+                  right: '16px',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(0,0,0,0.3)',
+                  color: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '18px',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                ✕
+              </button>
+
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div className="badge-live open" style={{ marginBottom: '8px' }}>
+                  <span className="pulse-dot" />
+                  {selectedGame.status === 'OPEN' || selectedGame.status === 'APPROVED' ? `Còn ${selectedGame.slotsNeeded} slot` : 'Đã đủ'}
+                </div>
+                <h2 style={{ fontSize: '24px', fontWeight: 900, margin: 0, letterSpacing: '-0.5px' }}>
+                  {selectedGame.courtName}
+                </h2>
               </div>
-              <div style={{ display: 'flex', gap: '16px' }}>
-                <button style={{ flex: 1, padding: '16px', backgroundColor: 'var(--blue)', color: '#ffffff', fontSize: '18px', fontWeight: 800, border: 'none', borderRadius: '12px', cursor: 'pointer', transition: 'background-color 0.2s' }} onMouseOver={e => e.currentTarget.style.backgroundColor = 'var(--blue-dark)'} onMouseOut={e => e.currentTarget.style.backgroundColor = 'var(--blue)'} onClick={() => {
-                  showAlert('Đặt chỗ thành công! Host sẽ sớm liên hệ với bạn.', 'success');
-                }}>Đặt chỗ ngay</button>
-                <button style={{ padding: '16px 32px', backgroundColor: 'transparent', color: 'var(--text)', fontSize: '18px', fontWeight: 700, border: '2px solid var(--border)', borderRadius: '12px', cursor: 'pointer', transition: 'all 0.2s' }} onMouseOver={e => { e.currentTarget.style.backgroundColor = 'var(--soft-bg)'; }} onMouseOut={e => { e.currentTarget.style.backgroundColor = 'transparent'; }} onClick={closeGameModal}>Đóng</button>
+              <div style={{ opacity: 0.15, position: 'absolute', right: '-10px', bottom: '-20px', pointerEvents: 'none' }}>
+                <BadmintonIcon size={140} />
+              </div>
+            </div>
+
+            {/* Modal Details Content */}
+            <div style={{ padding: '32px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '24px' }}>
+                <div style={{ backgroundColor: 'var(--soft-bg)', padding: '12px 16px', borderRadius: '14px', border: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 600, marginBottom: '2px' }}>Địa chỉ</div>
+                  <div style={{ fontWeight: 700, color: 'var(--navy)', fontSize: '14px' }}>{selectedGame.address}</div>
+                </div>
+
+                <div style={{ backgroundColor: 'var(--soft-bg)', padding: '12px 16px', borderRadius: '14px', border: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 600, marginBottom: '2px' }}>Thời gian chơi</div>
+                  <div style={{ fontWeight: 700, color: 'var(--navy)', fontSize: '14px' }}>
+                    {selectedGame.playDate} ({selectedGame.startTime} - {selectedGame.endTime})
+                  </div>
+                </div>
+
+                <div style={{ backgroundColor: 'var(--soft-bg)', padding: '12px 16px', borderRadius: '14px', border: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 600, marginBottom: '2px' }}>Trình độ yêu cầu</div>
+                  <div style={{ fontWeight: 700, color: 'var(--navy)', fontSize: '14px' }}>{selectedGame.skillLevel}</div>
+                </div>
+
+                <div style={{ backgroundColor: 'var(--soft-bg)', padding: '12px 16px', borderRadius: '14px', border: '1px solid var(--border)' }}>
+                  <div style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 600, marginBottom: '2px' }}>Chi phí tham gia</div>
+                  <div style={{ fontWeight: 900, color: 'var(--blue)', fontSize: '16px' }}>{selectedGame.price.toLocaleString()}đ/người</div>
+                </div>
+              </div>
+
+              {/* Host Info Box */}
+              <div style={{
+                backgroundColor: 'var(--bg)',
+                padding: '16px 20px',
+                borderRadius: '16px',
+                border: '1px solid var(--border)',
+                marginBottom: '24px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}>
+                <div>
+                  <div style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 600 }}>Host đăng kèo:</div>
+                  <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--navy)' }}>{selectedGame.hostName || 'Chủ sân'}</div>
+                  <div style={{ fontSize: '13px', color: 'var(--muted)' }}>Liên hệ: <strong>{selectedGame.contactInfo}</strong></div>
+                </div>
+
+                <button
+                  onClick={() => handleCopyPhone(selectedGame.contactInfo)}
+                  style={{
+                    padding: '8px 14px',
+                    borderRadius: '10px',
+                    backgroundColor: 'var(--soft-bg)',
+                    color: 'var(--navy)',
+                    border: '1px solid var(--border)',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Sao chép SĐT
+                </button>
+              </div>
+
+              {selectedGame.description && (
+                <div style={{ marginBottom: '24px', padding: '12px 16px', backgroundColor: 'var(--soft-bg)', borderRadius: '12px', fontSize: '13px', color: 'var(--muted)', fontStyle: 'italic' }}>
+                  "{selectedGame.description}"
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <a
+                  href={`tel:${selectedGame.contactInfo}`}
+                  style={{
+                    flex: 1,
+                    padding: '14px',
+                    backgroundColor: 'var(--blue)',
+                    color: '#ffffff',
+                    fontSize: '15px',
+                    fontWeight: 800,
+                    borderRadius: '14px',
+                    textAlign: 'center',
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px'
+                  }}
+                  onClick={() => {
+                    showAlert('Đang mở ứng dụng gọi điện tới Host...', 'info');
+                  }}
+                >
+                  <PhoneIcon size={18} /> Gọi điện cho Host
+                </a>
+
+                <button
+                  style={{
+                    padding: '14px 24px',
+                    backgroundColor: 'transparent',
+                    color: 'var(--text)',
+                    fontSize: '15px',
+                    fontWeight: 700,
+                    border: '1px solid var(--border)',
+                    borderRadius: '14px',
+                    cursor: 'pointer'
+                  }}
+                  onClick={closeGameModal}
+                >
+                  Đóng
+                </button>
               </div>
             </div>
           </div>
@@ -157,3 +348,4 @@ export const ExplorePage: React.FC = () => {
     </div>
   );
 };
+
