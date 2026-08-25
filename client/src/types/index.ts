@@ -20,9 +20,12 @@ export interface GamePost {
   sourceType: SourceType;
   status: PostStatus;
   
-  // UI-specific helpers based on the image
+  // UI-specific helpers
   dateLabel?: string;
   slotsText?: string;
+  originalText?: string;
+  confidenceScore?: number;
+  missingFields?: string[];
   
   // Map coordinates
   lat?: number;
@@ -34,6 +37,7 @@ export interface ParsedFacebookPost {
   address?: string;
   district?: string;
   date?: string;
+  playDate?: string;
   startTime?: string;
   endTime?: string;
   timeRange?: string;
@@ -41,9 +45,12 @@ export interface ParsedFacebookPost {
   price?: number;
   skillLevel?: string;
   contactInfo?: string;
+  description?: string;
   confidenceScore: number;
   missingFields: string[];
+  originalText?: string;
 }
+
 
 export interface SearchFilters {
   district?: string;
@@ -53,3 +60,4 @@ export interface SearchFilters {
   maxPrice?: number;
   availableSlotsOnly?: boolean;
 }
+
