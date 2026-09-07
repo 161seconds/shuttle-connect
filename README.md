@@ -1,48 +1,45 @@
 # Shuttle Connect
 
-## Project Description
-Shuttle Connect is a web platform designed to help badminton players find nearby drop-in games seamlessly. Users can search for games based on location, time, skill level, price, and available slots. Hosts can post game invitations either manually or by importing and parsing the text from their Facebook posts. 
+Frontend MVP giúp người chơi cầu lông tại TP.HCM tìm kèo vãng lai theo khu vực, ngày, giờ, trình độ, giá và số slot.
 
-## Features
-- **Map-based Search:** Locate courts and games nearby.
-- **Skill-level Matching:** Filter games by skill levels (yếu, trung bình, khá, cứng).
-- **Facebook Post Import:** Parse text from Facebook to extract times, dates, prices, and slots.
-- **Role-based Dashboards:** Player, Host, and Admin views with mock authentication.
-- **Host Verification & Approval Workflow:** Admins can review imported posts to prevent duplicates.
+## Tính năng
 
-## Tech Stack
-- **Frontend:** React, TypeScript, Vite
-- **Styling:** CSS Modules / Plain CSS (No external UI libraries)
-- **Routing:** React Router DOM
-- **Icons:** Lucide React
-- **Package Manager:** pnpm
+- Trang tìm kiếm với bộ lọc và bản đồ VietMap-ready.
+- Host đăng kèo thủ công, quản lý bài của chính mình.
+- Dán nội dung Facebook thủ công, xem preview parser, tạo bản nháp.
+- Admin duyệt, từ chối hoặc đánh dấu bài trùng.
+- Mock login theo vai trò; dữ liệu lưu bằng `localStorage`.
+- Responsive desktop/mobile; light/dark theme.
 
-## How to Install
-Ensure you have `pnpm` installed globally. Then run:
+## Công nghệ
+
+React, TypeScript, Vite, React Router, plain CSS, Lucide icons, pnpm.
+
+## Chạy dự án
 
 ```bash
 cd client
 pnpm install
-```
-
-## How to Run
-Start the Vite development server:
-
-```bash
-cd client
 pnpm dev
 ```
 
-## Environment Variables
-Copy `.env.example` to `.env` in the `client` directory and update your keys.
+## Kiểm tra
 
 ```bash
-cp client/.env.example client/.env
+cd client
+pnpm lint
+pnpm check:parser
+pnpm build
 ```
 
-Example content:
-`VITE_VIETMAP_API_KEY=your_vietmap_api_key_here`
+## Biến môi trường
 
-## MVP Limitations & Policy
+```env
+VITE_VIETMAP_API_KEY=your_vietmap_api_key_here
+```
+
+Copy `.env.example` thành `client/.env` khi bắt đầu tích hợp VietMap thật. Không commit API key.
+
+## Giới hạn MVP
+
 This MVP does not scrape Facebook groups. It supports manual Facebook post import and future official Facebook Page API integration.
-
