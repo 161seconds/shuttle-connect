@@ -1,17 +1,18 @@
-export type UserRole = "PLAYER" | "HOST" | "ADMIN";
-export type SourceType = "MANUAL" | "FACEBOOK_IMPORT" | "PAGE_API_PLACEHOLDER";
-export type PostStatus = "OPEN" | "FULL" | "EXPIRED" | "PENDING" | "APPROVED" | "REJECTED" | "DUPLICATE";
-export type SkillLevel = "Yếu" | "Trung bình" | "Trung bình khá" | "Khá" | "Cứng" | "Tất cả";
+export type UserRole = 'PLAYER' | 'HOST' | 'ADMIN';
+export type SourceType = 'MANUAL' | 'FACEBOOK_IMPORT' | 'PAGE_API_PLACEHOLDER';
+export type PostStatus = 'OPEN' | 'FULL' | 'EXPIRED' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'DUPLICATE';
+export type SkillLevel = 'Yếu' | 'Trung bình' | 'Trung bình khá' | 'Khá' | 'Cứng' | 'Giao lưu';
 
 export interface GamePost {
   id: string;
+  ownerId: string;
   courtName: string;
   address: string;
   district: string;
-  playDate: string; // YYYY-MM-DD or readable string
-  startTime: string; // HH:mm
-  endTime: string; // HH:mm
-  skillLevel: SkillLevel | string;
+  playDate: string;
+  startTime: string;
+  endTime: string;
+  skillLevel: SkillLevel;
   slotsNeeded: number;
   price: number;
   hostName: string;
@@ -19,45 +20,38 @@ export interface GamePost {
   description: string;
   sourceType: SourceType;
   status: PostStatus;
-  
-  // UI-specific helpers
-  dateLabel?: string;
-  slotsText?: string;
+  lat: number;
+  lng: number;
+  createdAt: string;
   originalText?: string;
   confidenceScore?: number;
   missingFields?: string[];
-  
-  // Map coordinates
-  lat?: number;
-  lng?: number;
 }
 
 export interface ParsedFacebookPost {
   courtName?: string;
   address?: string;
   district?: string;
-  date?: string;
   playDate?: string;
   startTime?: string;
   endTime?: string;
-  timeRange?: string;
   slotsNeeded?: number;
   price?: number;
-  skillLevel?: string;
+  skillLevel?: SkillLevel;
   contactInfo?: string;
-  description?: string;
   confidenceScore: number;
   missingFields: string[];
-  originalText?: string;
+  originalText: string;
 }
-
 
 export interface SearchFilters {
-  district?: string;
-  date?: string;
-  timeRange?: string;
-  skillLevel?: string;
-  maxPrice?: number;
-  availableSlotsOnly?: boolean;
+  district: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  skillLevel: string;
+  maxPrice: string;
+  availableSlotsOnly: boolean;
 }
 
+export type NewGamePost = Omit<GamePost, 'id' | 'createdAt'>;

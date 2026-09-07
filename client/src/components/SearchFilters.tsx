@@ -1,139 +1,28 @@
-import React from 'react';
-import type { SearchFilters as ISearchFilters } from '../types';
-import { CustomSelect } from './CustomSelect';
-import { DateSelect } from './DateSelect';
+import { RotateCcw } from 'lucide-react';
+import type { SearchFilters as Filters } from '../types';
 
-interface SearchFiltersProps {
-  filters: ISearchFilters;
-  onFilterChange: (filters: ISearchFilters) => void;
-}
-
-export const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, onFilterChange }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type } = e.target;
-    let finalValue: any = value;
-    
-    if (type === 'checkbox') {
-      finalValue = (e.target as HTMLInputElement).checked;
-    } else if (type === 'number') {
-      finalValue = value ? Number(value) : undefined;
-    }
-
-    onFilterChange({ ...filters, [name]: finalValue });
-  };
-
-  const handleCustomChange = (name: keyof ISearchFilters, value: any) => {
-    onFilterChange({ ...filters, [name]: value });
-  };
-
-  const handleReset = () => {
-    onFilterChange({});
-  };
-
-  const hasActiveFilters = Boolean(
-    filters.district || filters.date || filters.skillLevel || filters.maxPrice || filters.availableSlotsOnly
-  );
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
-        <div style={{ flex: '1 1 150px' }}>
-          <CustomSelect 
-            options={[
-              { value: '', label: 'Tất cả Quận/Huyện' },
-              { value: 'Quận 1', label: 'Quận 1' },
-              { value: 'Quận 3', label: 'Quận 3' },
-              { value: 'Quận 4', label: 'Quận 4' },
-              { value: 'Quận 7', label: 'Quận 7' },
-              { value: 'Quận 10', label: 'Quận 10' },
-              { value: 'Quận 11', label: 'Quận 11' },
-              { value: 'Bình Thạnh', label: 'Bình Thạnh' },
-              { value: 'Tân Bình', label: 'Tân Bình' },
-              { value: 'Tân Phú', label: 'Tân Phú' },
-              { value: 'Phú Nhuận', label: 'Phú Nhuận' },
-              { value: 'Gò Vấp', label: 'Gò Vấp' },
-              { value: 'Thủ Đức', label: 'Thủ Đức' },
-            ]}
-            value={filters.district || ''}
-            onChange={(val) => handleCustomChange('district', val)}
-            placeholder="Quận/huyện"
-            size="small"
-          />
-        </div>
-
-        <div style={{ flex: '1 1 150px' }}>
-          <DateSelect 
-            value={filters.date || ''}
-            onChange={(val) => handleCustomChange('date', val)}
-            placeholder="Chọn ngày"
-            includeAllOption={true}
-            size="small"
-          />
-        </div>
-
-        <div style={{ flex: '1 1 140px' }}>
-          <CustomSelect 
-            options={[
-              { value: '', label: 'Mọi trình độ' },
-              { value: 'Yếu', label: 'Yếu' },
-              { value: 'Trung bình', label: 'Trung bình' },
-              { value: 'Trung bình khá', label: 'Trung bình khá' },
-              { value: 'Khá', label: 'Khá' },
-              { value: 'Cứng', label: 'Cứng' },
-            ]}
-            value={filters.skillLevel || ''}
-            onChange={(val) => handleCustomChange('skillLevel', val)}
-            placeholder="Trình độ"
-            size="small"
-          />
-        </div>
-
-        <div style={{ flex: '1 1 130px' }}>
-          <input 
-            type="number" 
-            name="maxPrice" 
-            placeholder="Giá tối đa (đ)..." 
-            value={filters.maxPrice || ''} 
-            onChange={handleChange} 
-            style={{ width: '100%', padding: '8px 12px', fontSize: '13px', borderRadius: '12px' }} 
-          />
-        </div>
-      </div>
-
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', paddingTop: '4px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <input 
-            type="checkbox" 
-            id="availableSlots" 
-            name="availableSlotsOnly" 
-            checked={filters.availableSlotsOnly || false} 
-            onChange={handleChange} 
-            style={{ width: '16px', height: '16px', accentColor: 'var(--blue)', cursor: 'pointer' }} 
-          />
-          <label htmlFor="availableSlots" style={{ fontSize: '13px', fontWeight: 600, color: 'var(--navy)', cursor: 'pointer' }}>
-            Chỉ hiển thị kèo còn slot trống
-          </label>
-        </div>
-
-        {hasActiveFilters && (
-          <button 
-            type="button" 
-            onClick={handleReset}
-            style={{ 
-              fontSize: '13px', 
-              fontWeight: 600, 
-              color: 'var(--danger)', 
-              background: 'none', 
-              border: 'none', 
-              cursor: 'pointer',
-              textDecoration: 'underline'
-            }}
-          >
-            Xóa bộ lọc
-          </button>
-        )}
-      </div>
-    </div>
-  );
+const emptyFilters: Filters = {
+  district: '', date: '', startTime: '', endTime: '', skillLevel: '', maxPrice: '', availableSlotsOnly: true,
 };
 
+export function SearchFilters({ value, onChange }: { value: Filters; onChange: (filters: Filters) => void }) {
+  const update = (key: keyof Filters, next: string | boolean) => onChange({ ...value, [key]: next });
+  return (
+    <section className="filters" aria-label="Bộ lọc tìm kèo">
+      <label><span>Khu vực</span><select value={value.district} onChange={(event) => update('district', event.target.value)}>
+        <option value="">Tất cả quận</option>
+        {['Bình Thạnh', 'Quận 4', 'Quận 10', 'Tân Bình', 'Tân Phú', 'Thủ Đức'].map((item) => <option key={item}>{item}</option>)}
+      </select></label>
+      <label><span>Ngày chơi</span><input type="date" value={value.date} onChange={(event) => update('date', event.target.value)} /></label>
+      <label><span>Từ giờ</span><input type="time" value={value.startTime} onChange={(event) => update('startTime', event.target.value)} /></label>
+      <label><span>Đến giờ</span><input type="time" value={value.endTime} onChange={(event) => update('endTime', event.target.value)} /></label>
+      <label><span>Trình độ</span><select value={value.skillLevel} onChange={(event) => update('skillLevel', event.target.value)}>
+        <option value="">Mọi trình độ</option>
+        {['Yếu', 'Trung bình', 'Trung bình khá', 'Khá', 'Cứng', 'Giao lưu'].map((item) => <option key={item}>{item}</option>)}
+      </select></label>
+      <label><span>Giá tối đa</span><input type="number" min="0" step="10000" placeholder="100000" value={value.maxPrice} onChange={(event) => update('maxPrice', event.target.value)} /></label>
+      <label className="check-field"><input type="checkbox" checked={value.availableSlotsOnly} onChange={(event) => update('availableSlotsOnly', event.target.checked)} /><span>Chỉ kèo còn slot</span></label>
+      <button className="reset-filter" onClick={() => onChange(emptyFilters)}><RotateCcw size={15} />Đặt lại</button>
+    </section>
+  );
+}

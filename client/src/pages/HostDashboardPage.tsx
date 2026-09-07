@@ -1,302 +1,103 @@
-import React, { useState, useEffect } from 'react';
-import { ImportFacebookPost } from '../components/ImportFacebookPost';
-import { HostPostForm } from '../components/HostPostForm';
-import { api } from '../api';
-import type { GamePost, PostStatus } from '../types';
-import { useAlert } from '../contexts/GlobalAlertContext';
-import { CalendarIcon, UsersIcon, CheckCircleIcon, MapPinIcon } from '../components/icons';
+import { FileInput, Plus, Trash2 } from 'lucide-react';
+import { useState, type FormEvent } from 'react';
+import { postsApi } from '../api';
+import { useAuth } from '../contexts/auth-context';
+import type { GamePost, ParsedFacebookPost, SkillLevel } from '../types';
+import { parseFacebookPost } from '../utils/postParser';
 
-export const HostDashboardPage: React.FC = () => {
-  const [hostPosts, setHostPosts] = useState<GamePost[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'MANUAL' | 'FACEBOOK'>('MANUAL');
-  const { showAlert } = useAlert();
-
-  const fetchHostPosts = async () => {
-    setLoading(true);
-    try {
-      const data = await api.getAllPosts();
-      setHostPosts(data);
-    } catch (error) {
-      console.error('Error fetching host posts:', error);
-      showAlert('Lỗi khi tải danh sách bài đăng', 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchHostPosts();
-  }, []);
-
-  const handleToggleStatus = async (id: string, currentStatus: PostStatus) => {
-    const nextStatus: PostStatus = currentStatus === 'OPEN' ? 'FULL' : 'OPEN';
-    try {
-      await api.updatePostStatus(id, nextStatus);
-      showAlert(`Đã cập nhật trạng thái thành: ${nextStatus === 'FULL' ? 'Đã đủ người (FULL)' : 'Đang mở (OPEN)'}`, 'success');
-      fetchHostPosts();
-    } catch (err) {
-      console.error(err);
-      showAlert('Lỗi cập nhật trạng thái', 'error');
-    }
-  };
-
-  const handleDeletePost = async (id: string) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa bài đăng này không?')) {
-      try {
-        await api.deletePost(id);
-        showAlert('Đã xóa bài đăng', 'info');
-        fetchHostPosts();
-      } catch (err) {
-        console.error(err);
-        showAlert('Lỗi khi xóa bài đăng', 'error');
-      }
-    }
-  };
-
-  const openCount = hostPosts.filter(p => p.status === 'OPEN').length;
-  const pendingCount = hostPosts.filter(p => p.status === 'PENDING').length;
-  const fullCount = hostPosts.filter(p => p.status === 'FULL').length;
-
-  return (
-    <div style={{ padding: '40px 24px', width: '100%', maxWidth: '1440px', margin: '0 auto' }}>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', flexWrap: 'wrap', gap: '16px' }}>
-        <div>
-          <h1 style={{ fontSize: '32px', fontWeight: 900, color: 'var(--navy)', letterSpacing: '-0.5px', marginBottom: '4px' }}>
-            Bảng điều khiển Host
-          </h1>
-          <p style={{ fontSize: '15px', color: 'var(--muted)', margin: 0 }}>
-            Quản lý các kèo vãng lai, đăng bài mới hoặc nhập nhanh từ bài viết Facebook.
-          </p>
-        </div>
-
-        {/* Quick Stats */}
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-          <div style={{ backgroundColor: 'var(--surface)', padding: '10px 20px', borderRadius: '16px', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ color: 'var(--green)' }}><CalendarIcon size={20} /></span>
-            <div>
-              <div style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 600 }}>Đang mở</div>
-              <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--navy)' }}>{openCount} kèo</div>
-            </div>
-          </div>
-          <div style={{ backgroundColor: 'var(--surface)', padding: '10px 20px', borderRadius: '16px', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ color: 'var(--warning)' }}><UsersIcon size={20} /></span>
-            <div>
-              <div style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 600 }}>Chờ duyệt</div>
-              <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--navy)' }}>{pendingCount} bài</div>
-            </div>
-          </div>
-          <div style={{ backgroundColor: 'var(--surface)', padding: '10px 20px', borderRadius: '16px', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ color: 'var(--blue)' }}><CheckCircleIcon size={20} /></span>
-            <div>
-              <div style={{ fontSize: '11px', color: 'var(--muted)', fontWeight: 600 }}>Đã đủ người</div>
-              <div style={{ fontSize: '16px', fontWeight: 800, color: 'var(--navy)' }}>{fullCount} kèo</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Grid: Form Left, List Right */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', alignItems: 'start' }}>
-        <style>{`
-          @media (max-width: 1024px) {
-            .host-grid-container {
-              grid-template-columns: 1fr !important;
-            }
-          }
-        `}</style>
-        
-        {/* Left Column: Tabbed Creation */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {/* Tabs */}
-          <div style={{ display: 'flex', gap: '8px', backgroundColor: 'var(--soft-bg)', padding: '6px', borderRadius: '16px', border: '1px solid var(--border)' }}>
-            <button
-              onClick={() => setActiveTab('MANUAL')}
-              style={{
-                flex: 1,
-                padding: '10px 16px',
-                borderRadius: '12px',
-                fontSize: '14px',
-                fontWeight: 700,
-                backgroundColor: activeTab === 'MANUAL' ? 'var(--surface)' : 'transparent',
-                color: activeTab === 'MANUAL' ? 'var(--blue)' : 'var(--muted)',
-                boxShadow: activeTab === 'MANUAL' ? 'var(--shadow-sm)' : 'none',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-            >
-              ✍️ Đăng thủ công
-            </button>
-            <button
-              onClick={() => setActiveTab('FACEBOOK')}
-              style={{
-                flex: 1,
-                padding: '10px 16px',
-                borderRadius: '12px',
-                fontSize: '14px',
-                fontWeight: 700,
-                backgroundColor: activeTab === 'FACEBOOK' ? 'var(--surface)' : 'transparent',
-                color: activeTab === 'FACEBOOK' ? 'var(--blue)' : 'var(--muted)',
-                boxShadow: activeTab === 'FACEBOOK' ? 'var(--shadow-sm)' : 'none',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-            >
-              ⚡ Import từ Facebook
-            </button>
-          </div>
-
-          {activeTab === 'MANUAL' ? (
-            <HostPostForm onSuccess={fetchHostPosts} />
-          ) : (
-            <ImportFacebookPost onSuccess={fetchHostPosts} />
-          )}
-        </div>
-
-        {/* Right Column: Submitted Posts List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--navy)', margin: 0 }}>
-              Danh sách kèo của bạn ({hostPosts.length})
-            </h2>
-            <button
-              onClick={fetchHostPosts}
-              style={{ fontSize: '13px', fontWeight: 600, color: 'var(--blue)', background: 'none', border: 'none', cursor: 'pointer' }}
-            >
-              Tải lại ↻
-            </button>
-          </div>
-
-          {loading ? (
-            <div style={{ padding: '32px', textAlign: 'center', color: 'var(--muted)', backgroundColor: 'var(--surface)', borderRadius: '20px', border: '1px solid var(--border)' }}>
-              Đang tải danh sách bài đăng...
-            </div>
-          ) : hostPosts.length === 0 ? (
-            <div style={{ padding: '48px 24px', textAlign: 'center', backgroundColor: 'var(--surface)', borderRadius: '20px', border: '1px solid var(--border)' }}>
-              <p style={{ color: 'var(--muted)', fontWeight: 600, marginBottom: '12px' }}>Bạn chưa tạo kèo nào.</p>
-              <p style={{ fontSize: '13px', color: 'var(--muted)' }}>Hãy sử dụng biểu mẫu bên trái để tạo kèo đầu tiên của bạn!</p>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '720px', overflowY: 'auto', paddingRight: '4px' }}>
-              {hostPosts.map((post) => {
-                const isPending = post.status === 'PENDING';
-                const isOpen = post.status === 'OPEN' || post.status === 'APPROVED';
-
-
-                return (
-                  <div
-                    key={post.id}
-                    style={{
-                      backgroundColor: 'var(--surface)',
-                      borderRadius: '16px',
-                      padding: '16px 20px',
-                      border: '1px solid var(--border)',
-                      boxShadow: 'var(--shadow-sm)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '10px'
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                          <span style={{
-                            padding: '2px 8px',
-                            borderRadius: '6px',
-                            fontSize: '11px',
-                            fontWeight: 800,
-                            backgroundColor: isOpen ? 'rgba(24, 179, 101, 0.15)' : isPending ? 'rgba(255, 138, 31, 0.15)' : 'rgba(100, 116, 139, 0.15)',
-                            color: isOpen ? 'var(--green)' : isPending ? 'var(--warning)' : 'var(--muted)'
-                          }}>
-                            {isOpen ? '● ĐANG MỞ' : isPending ? '⏳ CHỜ DUYỆT' : '✓ ĐỦ NGƯỜI'}
-                          </span>
-                          {post.sourceType === 'FACEBOOK_IMPORT' && (
-                            <span style={{ padding: '2px 6px', borderRadius: '6px', backgroundColor: '#e7f0ff', color: '#1877f2', fontSize: '10px', fontWeight: 700 }}>
-                              Facebook Import
-                            </span>
-                          )}
-                        </div>
-                        <h4 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: 'var(--navy)' }}>
-                          {post.courtName}
-                        </h4>
-                      </div>
-
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--blue)' }}>
-                          {post.price.toLocaleString()}đ
-                        </div>
-                        <div style={{ fontSize: '11px', color: 'var(--muted)' }}>/người</div>
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', fontSize: '13px', color: 'var(--muted)' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><MapPinIcon size={14} /> {post.district}</span>
-                      <span>•</span>
-                      <span>{post.playDate} ({post.startTime} - {post.endTime})</span>
-                      <span>•</span>
-                      <span>Trình: <strong>{post.skillLevel}</strong></span>
-                      <span>•</span>
-                      <span>Cần: <strong>{post.slotsNeeded} slot</strong></span>
-                    </div>
-
-                    {post.description && (
-                      <p style={{ fontSize: '12px', color: 'var(--muted)', margin: 0, fontStyle: 'italic', backgroundColor: 'var(--soft-bg)', padding: '6px 10px', borderRadius: '8px' }}>
-                        "{post.description}"
-                      </p>
-                    )}
-
-                    {/* Actions */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '8px', borderTop: '1px solid var(--border)' }}>
-                      <div style={{ fontSize: '12px', color: 'var(--muted)' }}>
-                        LH: <strong>{post.contactInfo}</strong>
-                      </div>
-                      
-                      <div style={{ display: 'flex', gap: '8px' }}>
-                        {!isPending && (
-                          <button
-                            onClick={() => handleToggleStatus(post.id, post.status)}
-                            style={{
-                              padding: '6px 12px',
-                              borderRadius: '8px',
-                              fontSize: '12px',
-                              fontWeight: 700,
-                              backgroundColor: isOpen ? 'var(--soft-bg)' : 'rgba(24, 179, 101, 0.1)',
-                              color: isOpen ? 'var(--muted)' : 'var(--green)',
-                              border: '1px solid var(--border)',
-                              cursor: 'pointer'
-                            }}
-                          >
-                            {isOpen ? 'Đánh dấu Đủ Người' : 'Mở lại kèo'}
-                          </button>
-                        )}
-                        <button
-                          onClick={() => handleDeletePost(post.id)}
-                          style={{
-                            padding: '6px 10px',
-                            borderRadius: '8px',
-                            fontSize: '12px',
-                            fontWeight: 700,
-                            backgroundColor: 'transparent',
-                            color: 'var(--danger)',
-                            border: '1px solid var(--danger)',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          Xóa
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+const today = () => {
+  const date = new Date();
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 };
 
+const locations: Record<string, [number, number]> = {
+  'Bình Thạnh': [10.811, 106.71], 'Quận 4': [10.76, 106.7], 'Quận 10': [10.773, 106.667],
+  'Tân Bình': [10.801, 106.652], 'Tân Phú': [10.79, 106.625], 'Thủ Đức': [10.85, 106.76],
+};
+
+interface ManualForm {
+  courtName: string; address: string; district: string; playDate: string; startTime: string; endTime: string;
+  skillLevel: SkillLevel; slotsNeeded: string; price: string; contactInfo: string; description: string;
+}
+
+const blankForm = (): ManualForm => ({
+  courtName: '', address: '', district: 'Bình Thạnh', playDate: today(), startTime: '19:00', endTime: '21:00',
+  skillLevel: 'Trung bình', slotsNeeded: '2', price: '80000', contactInfo: '', description: '',
+});
+
+export function HostDashboardPage() {
+  const { userId } = useAuth();
+  const [tab, setTab] = useState<'manual' | 'import'>('manual');
+  const [form, setForm] = useState(blankForm);
+  const [facebookText, setFacebookText] = useState('');
+  const [preview, setPreview] = useState<ParsedFacebookPost>();
+  const [posts, setPosts] = useState(() => postsApi.listByOwner(userId));
+  const [message, setMessage] = useState('');
+  const refresh = () => setPosts(postsApi.listByOwner(userId));
+  const update = <K extends keyof ManualForm>(key: K, value: ManualForm[K]) => setForm((current) => ({ ...current, [key]: value }));
+
+  const submitManual = (event: FormEvent) => {
+    event.preventDefault();
+    if (!form.courtName.trim() || !form.contactInfo.trim()) return setMessage('Nhập tên sân và thông tin liên hệ.');
+    if (form.endTime <= form.startTime) return setMessage('Giờ kết thúc phải sau giờ bắt đầu.');
+    const [lat, lng] = locations[form.district] ?? [10.78, 106.68];
+    postsApi.create({
+      ownerId: userId, courtName: form.courtName.trim(), address: form.address.trim() || `${form.courtName}, ${form.district}`,
+      district: form.district, playDate: form.playDate, startTime: form.startTime, endTime: form.endTime,
+      skillLevel: form.skillLevel, slotsNeeded: Number(form.slotsNeeded), price: Number(form.price), hostName: 'Nam Nguyễn',
+      contactInfo: form.contactInfo.trim(), description: form.description.trim() || 'Kèo giao lưu, vui lòng đến đúng giờ.',
+      sourceType: 'MANUAL', status: 'OPEN', lat, lng,
+    });
+    setForm(blankForm()); setMessage('Đã đăng kèo.'); refresh();
+  };
+
+  const parseImport = () => {
+    if (!facebookText.trim()) return setMessage('Dán nội dung bài Facebook trước.');
+    setPreview(parseFacebookPost(facebookText)); setMessage('Đã trích xuất. Kiểm tra dữ liệu trước khi tạo nháp.');
+  };
+
+  const createDraft = () => {
+    if (!preview) return;
+    const [lat, lng] = locations[preview.district ?? ''] ?? [10.78, 106.68];
+    postsApi.create({
+      ownerId: userId, courtName: preview.courtName ?? 'Chưa xác định', address: preview.address ?? 'Chưa xác định',
+      district: preview.district ?? 'Chưa xác định', playDate: preview.playDate ?? '', startTime: preview.startTime ?? '',
+      endTime: preview.endTime ?? '', skillLevel: preview.skillLevel ?? 'Giao lưu', slotsNeeded: preview.slotsNeeded ?? 0,
+      price: preview.price ?? 0, hostName: 'Nam Nguyễn', contactInfo: preview.contactInfo ?? 'Chưa xác định',
+      description: facebookText, sourceType: 'FACEBOOK_IMPORT', status: 'PENDING', lat, lng,
+      originalText: facebookText, confidenceScore: preview.confidenceScore, missingFields: preview.missingFields,
+    });
+    setFacebookText(''); setPreview(undefined); setMessage('Đã tạo bản nháp và gửi Admin duyệt.'); refresh();
+  };
+
+  const toggle = (post: GamePost) => {
+    if (post.status !== 'OPEN' && post.status !== 'FULL') return;
+    postsApi.updateStatus(post.id, post.status === 'OPEN' ? 'FULL' : 'OPEN'); refresh();
+  };
+
+  const remove = (id: string) => {
+    if (!window.confirm('Xóa bài đăng này?')) return;
+    postsApi.remove(id, userId); refresh();
+  };
+
+  return <main className="page-shell dashboard-page">
+    <div className="page-intro compact"><p className="eyebrow">Host console</p><h1>Đăng kèo.<br />Lấp đầy sân.</h1><p>Chỉ bài thuộc tài khoản mock hiện tại xuất hiện tại đây.</p></div>
+    <div className="dashboard-grid">
+      <section className="form-card">
+        <div className="tabs"><button className={tab === 'manual' ? 'active' : ''} onClick={() => setTab('manual')}><Plus size={16} />Đăng thủ công</button><button className={tab === 'import' ? 'active' : ''} onClick={() => setTab('import')}><FileInput size={16} />Import Facebook</button></div>
+        {message && <p className="form-message">{message}</p>}
+        {tab === 'manual' ? <form className="post-form" onSubmit={submitManual}>
+          <label><span>Tên sân *</span><input required value={form.courtName} onChange={(e) => update('courtName', e.target.value)} /></label>
+          <div className="form-row"><label><span>Quận/Huyện *</span><select value={form.district} onChange={(e) => update('district', e.target.value)}>{Object.keys(locations).map((item) => <option key={item}>{item}</option>)}</select></label><label><span>Ngày chơi *</span><input required type="date" value={form.playDate} onChange={(e) => update('playDate', e.target.value)} /></label></div>
+          <label><span>Địa chỉ</span><input value={form.address} onChange={(e) => update('address', e.target.value)} /></label>
+          <div className="form-row"><label><span>Bắt đầu</span><input required type="time" value={form.startTime} onChange={(e) => update('startTime', e.target.value)} /></label><label><span>Kết thúc</span><input required type="time" value={form.endTime} onChange={(e) => update('endTime', e.target.value)} /></label></div>
+          <div className="form-row"><label><span>Trình độ</span><select value={form.skillLevel} onChange={(e) => update('skillLevel', e.target.value as SkillLevel)}>{['Yếu', 'Trung bình', 'Trung bình khá', 'Khá', 'Cứng', 'Giao lưu'].map((item) => <option key={item}>{item}</option>)}</select></label><label><span>Số slot</span><input required min="1" max="20" type="number" value={form.slotsNeeded} onChange={(e) => update('slotsNeeded', e.target.value)} /></label></div>
+          <div className="form-row"><label><span>Chi phí/người</span><input required min="0" step="5000" type="number" value={form.price} onChange={(e) => update('price', e.target.value)} /></label><label><span>Điện thoại/Zalo *</span><input required value={form.contactInfo} onChange={(e) => update('contactInfo', e.target.value)} /></label></div>
+          <label><span>Mô tả</span><textarea rows={3} value={form.description} onChange={(e) => update('description', e.target.value)} /></label>
+          <button className="button button-primary full-button" type="submit">Đăng kèo ngay</button>
+        </form> : <div className="import-form"><label><span>Nội dung bài Facebook</span><textarea rows={8} value={facebookText} onChange={(e) => { setFacebookText(e.target.value); setPreview(undefined); }} placeholder="Tối nay sân TADA Bình Thạnh 19-21h cần 2 vãng lai trình TB khá, 80k/người, ib mình..." /></label><button className="button button-dark full-button" onClick={parseImport}>Trích xuất dữ liệu</button>{preview && <div className="parse-preview"><div className="score"><b>{preview.confidenceScore}%</b><span>độ tin cậy</span></div><dl><div><dt>Sân</dt><dd>{preview.courtName ?? '—'}</dd></div><div><dt>Khu vực</dt><dd>{preview.district ?? '—'}</dd></div><div><dt>Ngày · giờ</dt><dd>{preview.playDate ?? '—'} · {preview.startTime ?? '—'}–{preview.endTime ?? '—'}</dd></div><div><dt>Slot · giá</dt><dd>{preview.slotsNeeded ?? '—'} · {preview.price === undefined ? '—' : preview.price === 0 ? 'Miễn phí' : `${preview.price.toLocaleString('vi-VN')}đ`}</dd></div></dl>{preview.missingFields.length > 0 && <p className="missing">Thiếu: {preview.missingFields.join(', ')}</p>}<button className="button button-primary full-button" onClick={createDraft}>Tạo bản nháp chờ duyệt</button></div>}</div>}
+      </section>
+      <section className="host-posts"><div className="panel-heading"><div><p className="eyebrow">Bài của bạn</p><h2>{posts.length} bài đăng</h2></div></div>{posts.length === 0 ? <div className="empty-state"><b>Chưa có bài.</b><span>Tạo kèo đầu tiên ở biểu mẫu bên cạnh.</span></div> : posts.map((post) => <article className="manage-row" key={post.id}><div><span className={`status status-${post.status.toLowerCase()}`}>{post.status}</span><h3>{post.courtName}</h3><p>{post.playDate} · {post.startTime}–{post.endTime} · {post.slotsNeeded} slot</p></div><div className="manage-actions">{(post.status === 'OPEN' || post.status === 'FULL') && <button onClick={() => toggle(post)}>{post.status === 'OPEN' ? 'Đánh dấu đủ' : 'Mở lại'}</button>}<button className="danger-action" onClick={() => remove(post.id)} aria-label={`Xóa ${post.courtName}`}><Trash2 size={16} /></button></div></article>)}</section>
+    </div>
+  </main>;
+}
